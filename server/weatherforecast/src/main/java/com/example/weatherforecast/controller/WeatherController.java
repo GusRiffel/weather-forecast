@@ -19,7 +19,7 @@ public class WeatherController {
         this.weatherService = weatherService;
     }
 
-    @GetMapping("/{cityName}")
+    @GetMapping(path = "/{cityName}")
     @CrossOrigin(origins = "http://127.0.0.1:5173/")
     public Mono<Weather> weather(@PathVariable String cityName) {
         return weatherService.getWeatherForecastByCity(cityName);

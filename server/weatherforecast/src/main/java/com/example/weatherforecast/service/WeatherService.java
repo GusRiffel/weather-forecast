@@ -23,7 +23,7 @@ public class WeatherService {
 
     public Mono<Weather> getWeatherForecastByCity(String cityName) {
         return webClient.get()
-                .uri("weather?q=" + cityName + "&appid=" + apiKey)
+                .uri("weather?q=" + cityName + "&appid=" + apiKey + "&units=metric")
                 .retrieve()
                 .bodyToMono(Weather.class);
     }
