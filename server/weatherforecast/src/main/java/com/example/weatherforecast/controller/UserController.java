@@ -21,6 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/createuser")
+    @CrossOrigin(origins = "http://127.0.0.1:5173/")
     public User save(@RequestBody @Valid User user) {
         return userService.save(user);
     }
