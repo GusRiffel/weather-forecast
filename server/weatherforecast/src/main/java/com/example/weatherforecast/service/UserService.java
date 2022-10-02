@@ -1,26 +1,17 @@
 package com.example.weatherforecast.service;
 
 import com.example.weatherforecast.domain.User;
-import com.example.weatherforecast.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
-@Service
-public class UserService {
+public interface UserService {
+    List<User> listAll();
 
-    @Autowired
-    private UserRepository userRepository;
+    User save(User user);
 
-    public List<User> listAll() {
-        return userRepository.findAll();
-    }
+    User update(long id, User user);
 
-    @Transactional
-    public User save(@RequestBody User user) {
-        return userRepository.save(user);
-    }
+    void delete(long id);
+
+    User getById(long id);
 }

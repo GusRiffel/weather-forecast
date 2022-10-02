@@ -16,7 +16,7 @@ export function LoginForm() {
 
   async function createUser(data: FormValues) {
     try {
-      const user = axios.post<FormValues>(
+      const user = await axios.post<FormValues>(
         "http://localhost:8080/user/createuser",
         { username: data.username, email: data.email, password: data.password },
         {
