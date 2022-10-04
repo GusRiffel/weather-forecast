@@ -3,7 +3,6 @@ package com.example.weatherforecast.controller;
 import com.example.weatherforecast.domain.User;
 import com.example.weatherforecast.dto.UserDto;
 import com.example.weatherforecast.service.UserService;
-import com.example.weatherforecast.service.UserServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
