@@ -17,18 +17,22 @@ public class WeatherData {
     public void setTemperature(String temperature) {
         this.temperature = temperature;
     }
+
     @JsonProperty("pressure")
     public void setPressure(String pressure) {
         this.pressure = pressure;
     }
+
     @JsonProperty("humidity")
     public void setHumidity(String humidity) {
         this.humidity = humidity;
     }
+
     @JsonProperty("temp_min")
     public void setMinimumTemperature(String minimumTemperature) {
         this.minimumTemperature = minimumTemperature;
     }
+
     @JsonProperty("temp_max")
     public void setMaximumTemperature(String maximumTemperature) {
         this.maximumTemperature = maximumTemperature;

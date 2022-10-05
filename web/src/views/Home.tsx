@@ -1,7 +1,7 @@
-import { Container } from "../components/Container";
+import { WeatherContainer } from "../containers/WeatherContainer";
 
 export function Home() {
   return <div>
-    <Container />
+    <WeatherContainer />
   </div>;
 }
