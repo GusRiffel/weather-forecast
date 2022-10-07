@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -34,7 +35,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @CrossOrigin(origins = "http://127.0.0.1:5173/")
-    public ResponseEntity<UserDto> findById(@PathVariable long id) {
+    public ResponseEntity<UserDto> findById(@PathVariable UUID id) {
         User user = userService.getById(id);
         UserDto userResponse = modelMapper.map(user, UserDto.class);
 
@@ -53,7 +54,7 @@ public class UserController {
 
     @PutMapping("update/{id}")
     @CrossOrigin(origins = "http://127.0.0.1:5173/")
-    public ResponseEntity<UserDto> update(@PathVariable long id, @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> update(@PathVariable UUID id, @RequestBody UserDto userDto) {
         User userRequest = modelMapper.map(userDto, User.class);
         User user = userService.update(id, userRequest);
 
@@ -63,7 +64,7 @@ public class UserController {
 
     @DeleteMapping("/delete/{id}")
     @CrossOrigin(origins = "http://127.0.0.1:5173/")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

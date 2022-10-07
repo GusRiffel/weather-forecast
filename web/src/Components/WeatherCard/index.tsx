@@ -18,7 +18,7 @@ export function WeatherCard({
     switch (weatherCondition) {
       case WeatherCondition.CLOUDS:
         return <BsFillCloudsFill size={60} />
-      case WeatherCondition.ATMOSPHERE:
+      case WeatherCondition.HAZE:
         return <BsCloudHazeFill size={60}/>
       case WeatherCondition.CLEAR:
         return  <BsFillSunFill size={60} />
@@ -51,7 +51,6 @@ export function WeatherCard({
               <h1>{weatherCondition}</h1>
             </div>
           </div>
-          {/* <div className="flex justify-evenly text-center"> */}
           <div className="grid grid-cols-3 justify-items-center text-center">
             <div>
               <div className="text-2xl">

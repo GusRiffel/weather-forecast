@@ -21,6 +21,7 @@ export function SearchBar({onSubmit}: SearchBarProps) {
           className="border-solid border-2 rounded-md"
           type="text"
           placeholder="Search for a place"
+          size={50}
           required
         />
         <button className="ml-1 border-solid border-2 border-green-500 rounded-md" type="submit">Search</button>

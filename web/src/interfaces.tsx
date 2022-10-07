@@ -16,7 +16,7 @@ export enum WeatherCondition {
   DRIZZLE = "Drizzle",
   RAIN = "Rain",
   SNOW = "Snow",
-  ATMOSPHERE = "Atmosphere",
+  HAZE = "Haze",
   CLEAR = "Clear",
   CLOUDS = "Clouds",
 }
