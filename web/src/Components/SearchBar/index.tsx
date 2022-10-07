@@ -13,14 +13,14 @@ export function SearchBar({onSubmit}: SearchBarProps) {
 
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center py-5">
       <form onSubmit={handleSubmit((data) => onSubmit(data.city))}>
         <label htmlFor="searchBar"></label>
         <input
           {...register("city")}
           className="border-solid border-2 rounded-md"
           type="text"
-          placeholder="Type the name of city..."
+          placeholder="Search for a place"
           required
         />
         <button className="ml-1 border-solid border-2 border-green-500 rounded-md" type="submit">Search</button>

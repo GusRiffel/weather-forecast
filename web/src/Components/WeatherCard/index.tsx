@@ -35,23 +35,24 @@ export function WeatherCard({
 
   return (
     <div className="flex justify-center py-5 text-white font-bold">
-      <div className={`flex flex-col shadow-lg p-3 bg-gradient-to-b w-[50%] from-[#99ccff] to-[#66b2ff] rounded-md`}>
+      <div className={`flex flex-col shadow-lg p-2 bg-gradient-to-b w-[50%] from-[#99ccff] to-[#66b2ff] rounded-md`}>
         <div className="flex text-5xl font-black justify-center">
           <h1>{city}</h1>
         </div>
         <div>
-          <div className="flex items-center justify-between px-5">
+          <div className="grid grid-cols-3 items-center justify-items-center py-2">
             <div>
-              <div className="text-3xl">
+              <div className="text-2xl">
                 <h1>{dayjs().format("MMMM D, YYYY")}</h1>
               </div>
             </div>
             <div>{setWeatherIcon()}</div>
-            <div className="text-3xl">
+            <div className="text-2xl">
               <h1>{weatherCondition}</h1>
             </div>
           </div>
-          <div className="flex justify-evenly text-center">
+          {/* <div className="flex justify-evenly text-center"> */}
+          <div className="grid grid-cols-3 justify-items-center text-center">
             <div>
               <div className="text-2xl">
                 <h1>Temperature</h1>
