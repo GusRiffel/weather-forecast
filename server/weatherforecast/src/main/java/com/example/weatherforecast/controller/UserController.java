@@ -7,12 +7,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("user")
@@ -29,10 +29,11 @@ public class UserController {
         List<UserDto> userDtoList = userService.listAll()
                 .stream()
                 .map(user -> modelMapper.map(user, UserDto.class))
-                .collect(Collectors.toList());
+                .toList();
         return new ResponseEntity<>(userDtoList, HttpStatus.OK);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     @CrossOrigin(origins = "http://127.0.0.1:5173/")
     public ResponseEntity<UserDto> findById(@PathVariable UUID id) {
