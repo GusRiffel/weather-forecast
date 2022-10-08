@@ -3,7 +3,6 @@ import axios from "axios";
 
 type FormValues = {
   username: string;
-  email: string;
   password: string;
 };
 
@@ -18,7 +17,7 @@ export function LoginForm() {
     try {
       const user = await axios.post<FormValues>(
         "http://localhost:8080/user/createuser",
-        { username: data.username, email: data.email, password: data.password },
+        { username: data.username, password: data.password },
         {
           headers: {
             "Content-Type": "application/json",
@@ -40,7 +39,6 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit((data) => createUser(data))}>
       <input {...register("username")} placeholder="Type your username" />
-      <input {...register("email")} placeholder="Type your email" />
       <input {...register("password")} placeholder="Type your password" />
       <button type="submit">Submit</button>
     </form>
