@@ -13,10 +13,10 @@ export function LoginForm() {
     formState: { errors },
   } = useForm<FormValues>();
 
-  async function createUser(data: FormValues) {
+  async function loginUser(data: FormValues) {
     try {
       const user = await axios.post<FormValues>(
-        "http://localhost:8080/user/createuser",
+        "http://localhost:8080/login",
         { username: data.username, password: data.password },
         {
           headers: {
@@ -37,7 +37,7 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit((data) => createUser(data))}>
+    <form onSubmit={handleSubmit((data) => loginUser(data))}>
       <input {...register("username")} placeholder="Type your username" />
       <input {...register("password")} placeholder="Type your password" />
       <button type="submit">Submit</button>

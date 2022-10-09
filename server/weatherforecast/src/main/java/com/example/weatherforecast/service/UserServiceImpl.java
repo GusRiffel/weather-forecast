@@ -3,7 +3,9 @@ package com.example.weatherforecast.service;
 import com.example.weatherforecast.domain.User;
 import com.example.weatherforecast.exception.BadRequestException;
 import com.example.weatherforecast.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,17 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Service
+@Service @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> listAll() {
@@ -55,8 +55,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new BadRequestException("User not found"));
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username:" + username));
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 }
