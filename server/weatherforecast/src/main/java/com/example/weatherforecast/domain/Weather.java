@@ -3,7 +3,6 @@ package com.example.weatherforecast.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 

@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { CookieManager } from "../../utils/CookieManager";
+import { Cookies } from "react-cookie";
 
 type FormValues = {
   username: string;
@@ -12,25 +14,26 @@ export function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
+  const { createCookie, getCookie } = CookieManager(new Cookies());
+  console.log(getCookie());
 
   async function loginUser(data: FormValues) {
     try {
-      const user = await axios.post<FormValues>(
-        "http://localhost:8080/login",
-        { username: data.username, password: data.password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        },
-      );
-
-      console.log(JSON.stringify(user));
-      return user;
+      await axios
+        .post(
+          "http://localhost:8080/login",
+          { username: data.username, password: data.password },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        )
+        .then((res) => createCookie(res.data));
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log('error message: ', error.message);
+        console.log("error message: ", error.message);
         return error.message;
       }
     }
