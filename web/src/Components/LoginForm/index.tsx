@@ -1,7 +1,9 @@
-import { useForm } from "react-hook-form";
-import axios from "axios";
 import { useContext } from "react";
-import { CookieContext } from "../../utils/CookieManager";
+import { useForm } from "react-hook-form";
+
+import axios from "axios";
+
+import { CookieContext } from "../../utils/AuthProvider";
 
 type FormValues = {
   username: string;
@@ -14,7 +16,9 @@ export function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
+  
   const cookieContext = useContext(CookieContext);
+  
   async function loginUser(data: FormValues) {
     try {
       await axios
