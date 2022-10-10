@@ -1,8 +1,19 @@
+import { useContext } from "react";
+import {
+  BsFillCloudsFill,
+  BsCloudHazeFill,
+  BsFillSunFill,
+  BsCloudDrizzleFill,
+  BsFillCloudRainFill,
+  BsStarFill,
+} from "react-icons/bs";
+import { IoSnowSharp, IoThunderstormSharp } from "react-icons/io5";
+
+import * as dayjs from "dayjs";
+
 import { CityWeather } from "../../interfaces";
 import { WeatherCondition } from "../../interfaces";
-import * as dayjs from "dayjs";
-import { BsFillCloudsFill, BsCloudHazeFill, BsFillSunFill, BsCloudDrizzleFill, BsFillCloudRainFill } from "react-icons/bs";
-import {IoSnowSharp , IoThunderstormSharp} from "react-icons/io5";
+import { CookieContext } from "../../utils/AuthProvider";
 
 interface WeatherCardProps extends CityWeather {}
 
@@ -12,32 +23,44 @@ export function WeatherCard({
   weatherData,
   windSpeed,
 }: WeatherCardProps) {
-
+  const cookieContext = useContext(CookieContext);
 
   function setWeatherIcon() {
     switch (weatherCondition) {
       case WeatherCondition.CLOUDS:
-        return <BsFillCloudsFill size={60} />
+        return <BsFillCloudsFill size={60} />;
       case WeatherCondition.HAZE:
-        return <BsCloudHazeFill size={60}/>
+        return <BsCloudHazeFill size={60} />;
       case WeatherCondition.CLEAR:
-        return  <BsFillSunFill size={60} />
+        return <BsFillSunFill size={60} />;
       case WeatherCondition.DRIZZLE:
-        return  <BsCloudDrizzleFill size={60} />
+        return <BsCloudDrizzleFill size={60} />;
       case WeatherCondition.RAIN:
-        return  <BsFillCloudRainFill size={60} />
+        return <BsFillCloudRainFill size={60} />;
       case WeatherCondition.SNOW:
-        return <IoSnowSharp size={60} />
+        return <IoSnowSharp size={60} />;
       case WeatherCondition.THUNDERSTORM:
-        return <IoThunderstormSharp size={60} />
+        return <IoThunderstormSharp size={60} />;
     }
+  }
+
+  function favoriteHandler() {
+
   }
 
   return (
     <div className="flex justify-center py-5 text-white font-bold">
-      <div className={`flex flex-col shadow-lg p-2 bg-gradient-to-b w-[50%] from-[#99ccff] to-[#66b2ff] rounded-md`}>
-        <div className="flex text-5xl font-black justify-center">
-          <h1>{city}</h1>
+      <div
+        className={`flex flex-col shadow-lg p-2 bg-gradient-to-b w-[50%] from-[#99ccff] to-[#66b2ff] rounded-md`}
+      >
+        <div className="grid grid-cols-3 text-5xl font-black">
+          <div></div>
+          <div className="text-center">
+            <h1>{city}</h1>
+          </div>
+          <div className="justify-self-end cursor-pointer">
+            {cookieContext?.currentUser && <BsStarFill size={24} onClick={() => favoriteHandler}/>}
+          </div>
         </div>
         <div>
           <div className="grid grid-cols-3 items-center justify-items-center py-2">
