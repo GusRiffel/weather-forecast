@@ -2,18 +2,20 @@ import { Routes, Route } from "react-router-dom";
 import { Header } from "./components/Header";
 import { Home } from "./views/Home";
 import { Login } from "./views/Login";
-import { CookiesProvider } from "react-cookie";
+import { CookieProvider } from "./utils/CookieManager";
 
 function App() {
   return (
     <div className="App">
-      <CookiesProvider>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </CookiesProvider>
+      <>
+        <CookieProvider>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </CookieProvider>
+      </>
     </div>
   );
 }
