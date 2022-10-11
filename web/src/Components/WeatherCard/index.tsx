@@ -14,6 +14,7 @@ import * as dayjs from "dayjs";
 import { CityWeather } from "../../interfaces";
 import { WeatherCondition } from "../../interfaces";
 import { CookieContext } from "../../utils/AuthProvider";
+import axios from "axios";
 
 interface WeatherCardProps extends CityWeather {}
 
@@ -44,8 +45,26 @@ export function WeatherCard({
     }
   }
 
-  function favoriteHandler() {
-
+  async function favoriteHandler(city: string) {
+    try {
+      await axios
+        .post(
+          "http://localhost:8080/favorites/create",
+          { username: cookieContext?.currentUser, city: city },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        )
+        .then((res) => console.log(res.data));
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log("error message: ", error.message);
+        return error.message;
+      }
+    }
   }
 
   return (
@@ -59,7 +78,9 @@ export function WeatherCard({
             <h1>{city}</h1>
           </div>
           <div className="justify-self-end cursor-pointer">
-            {cookieContext?.currentUser && <BsStarFill size={24} onClick={() => favoriteHandler}/>}
+            {cookieContext?.currentUser && (
+              <BsStarFill size={24} onClick={() => favoriteHandler(city)} />
+            )}
           </div>
         </div>
         <div>

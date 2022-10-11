@@ -1,4 +1,5 @@
 export interface CityWeather {
+  id: number;
   city: string;
   weatherData: {
     temp: string;

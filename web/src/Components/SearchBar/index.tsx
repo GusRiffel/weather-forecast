@@ -1,20 +1,23 @@
 import { useForm } from "react-hook-form";
 
+
+
 type FormValues = {
   city: string;
 };
 
 interface SearchBarProps {
-  onSubmit: (city: string) => Promise<void>
+  onSubmit: (city: string, isFavorite:boolean) => Promise<void>
 }
 
 export function SearchBar({onSubmit}: SearchBarProps) {
   const {register, handleSubmit, formState: {errors}} = useForm<FormValues>();
+  
 
 
   return (
     <div className="flex justify-center py-5">
-      <form onSubmit={handleSubmit((data) => onSubmit(data.city))}>
+      <form onSubmit={handleSubmit((data) => onSubmit(data.city, false))}>
         <label htmlFor="searchBar"></label>
         <input
           {...register("city")}

@@ -1,14 +1,34 @@
-import { useState } from "react";
 import axios from "axios";
 import { SearchBar } from "../../components/SearchBar";
 import { WeatherCard } from "../../components/WeatherCard";
 import { CityWeather } from "../../interfaces";
-
+import { useContext, useEffect, useState } from "react";
+import { CookieContext } from "../../utils/AuthProvider";
+import { WeatherFavCard } from "../../components/WeatherFavCard";
 
 export function WeatherContainer() {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
+  const [favCities, setFavCities] = useState<string[]>([]);
+  const cookieContext = useContext(CookieContext);
 
-  async function getWeather(city: string){
+  useEffect(() => {
+    if (cookieContext?.currentUser) {
+      getFavWeather(cookieContext.currentUser);
+    }
+  }, []);
+  console.log(favCities);
+
+  async function getFavWeather(username: string) {
+    try {
+      await axios
+        .get(`http://localhost:8080/favorites/${username}`)
+        .then((res) => setFavCities(res.data));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function getWeather(city: string) {
     try {
       await axios
         .get(`http://localhost:8080/weather/${city}`)
@@ -21,9 +41,10 @@ export function WeatherContainer() {
   return (
     <>
       <SearchBar onSubmit={getWeather} />
-      {weathers && 
-        weathers.map((city) => <WeatherCard {...city}/>)
-      }
+      <div className="flex justify-center">
+        {favCities && favCities.map((city) => <WeatherFavCard city={city} />)}
+      </div>
+      {weathers && weathers.map((city) => <WeatherCard {...city} />)}
     </>
   );
 }

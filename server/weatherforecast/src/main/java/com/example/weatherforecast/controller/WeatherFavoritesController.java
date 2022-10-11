@@ -15,12 +15,14 @@ import java.util.List;
 public class WeatherFavoritesController {
 
     @Autowired
-    WeatherFavoritesServiceImpl weatherFavoritesService;
+    private WeatherFavoritesServiceImpl weatherFavoritesService;
+
 
     @GetMapping("/{username}")
     public ResponseEntity<List<String>> findAll(@PathVariable String username) {
         return new ResponseEntity<>(weatherFavoritesService.listAll(username), HttpStatus.OK );
     }
+
 
     @PostMapping("/create")
     public ResponseEntity<WeatherFavorites> save(@RequestBody @Valid WeatherFavorites weatherFavorites) {
