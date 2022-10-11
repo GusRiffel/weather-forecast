@@ -2,7 +2,7 @@ package com.example.weatherforecast.controller;
 
 import com.example.weatherforecast.domain.WeatherFavorites;
 import com.example.weatherforecast.dto.WeatherFavoriteDeleteDto;
-import com.example.weatherforecast.service.WeatherFavoritesServiceImpl;
+import com.example.weatherforecast.service.WeatherFavoritesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController()
 @RequestMapping("/favorites")
 public class WeatherFavoritesController {
 
     @Autowired
-    private WeatherFavoritesServiceImpl weatherFavoritesService;
+    private WeatherFavoritesService weatherFavoritesService;
 
     @GetMapping("/{username}")
     public ResponseEntity<List<String>> findAll(@PathVariable String username) {

@@ -7,16 +7,12 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.weatherforecast.domain.User;
 import com.example.weatherforecast.dto.UserDto;
 import com.example.weatherforecast.service.UserService;
-import com.example.weatherforecast.service.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +33,7 @@ public class UserController {
     private ModelMapper modelMapper;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @GetMapping("/all")
     public ResponseEntity<List<UserDto>> listAll() {
