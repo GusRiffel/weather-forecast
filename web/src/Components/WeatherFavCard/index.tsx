@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { CookieContext } from "../../utils/AuthProvider";
 import {
   BsFillCloudsFill,
   BsCloudHazeFill,
@@ -7,9 +8,10 @@ import {
   BsFillCloudRainFill,
   BsStarFill,
 } from "react-icons/bs";
-import { IoSnowSharp, IoThunderstormSharp } from "react-icons/io5";
+import { IoSnowSharp, IoThunderstormSharp, IoClose } from "react-icons/io5";
 
 import * as dayjs from "dayjs";
+import axios from "axios";
 
 interface WeatherFavCardProps {
   city: string;
@@ -17,19 +19,33 @@ interface WeatherFavCardProps {
 
 export function WeatherFavCard(props: WeatherFavCardProps) {
   const background = "bg-gradient-to-b from-[#99ccff] to-[#66b2ff] rounded-md";
-  const grid = "grid grid-rows-2"
+  const grid = "grid grid-rows-2";
   const [viewWeather, setViewWeather] = useState<boolean>(false);
+  const cookieContext = useContext(CookieContext);
 
   function handleFavClick() {
     setViewWeather(!viewWeather);
   }
 
+  async function handleDelete(city: string) {
+    try {
+      await axios.delete(`http://localhost:8080/favorites/delete`, {
+        data: { username: cookieContext.currentUser, city },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div
-      className={`mx-3 items-center cursor-pointer w-[10rem] text-white text-center px-3 ${background}`}
+      className={`mx-3 items-center cursor-pointer w-[10rem] text-white text-center ${background}`}
       onClick={() => handleFavClick()}
     >
       <div>
+        <div className="flex justify-end">
+          <IoClose onClick={() => handleDelete(props.city)}/>
+        </div>
         <div className="text-3xl">
           <h1>{props.city}</h1>
         </div>
@@ -41,7 +57,10 @@ export function WeatherFavCard(props: WeatherFavCardProps) {
               <h4>18°C</h4>
             </div>
             <div className="flex justify-center">
-              <BsFillCloudsFill size={32} />
+              <BsFillCloudsFill
+                
+                size={32}
+              />
             </div>
             <div className="">
               <h1>Clouds</h1>

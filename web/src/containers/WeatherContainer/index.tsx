@@ -41,7 +41,7 @@ export function WeatherContainer() {
     <>
       <SearchBar onSubmit={getWeather} />
       <div className="flex justify-center">
-        {favCities && favCities.map((city) => <WeatherFavCard city={city} />)}
+        {favCities && favCities.map((city, index) => <WeatherFavCard city={city} key={`weather-card-${index}`} />)}
       </div>
       {weathers && weathers.map((city, index) => <WeatherCard {...city} key={`weather-card-${index}`} />)}
     </>
