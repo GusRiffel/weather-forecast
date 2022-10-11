@@ -16,12 +16,13 @@ interface WeatherFavCardProps {
 }
 
 export function WeatherFavCard(props: WeatherFavCardProps) {
+  const background = "bg-gradient-to-b from-[#99ccff] to-[#66b2ff] rounded-md"
+
   return (
-    <div className="flex justify-center py-5 mx-3 text-white font-bold">
       <div
-        className={`flex flex-col shadow-lg p-2 bg-gradient-to-b w-[16rem] from-[#99ccff] to-[#66b2ff] rounded-md`}
+        className={`mx-3 text-white text-center p-3 ${background}`}
       >
-        <div className="grid grid-cols-3 text-4xl font-black">
+        <div className="">
           <div></div>
           <div className="">
             <h1>{props.city}</h1>
@@ -74,6 +75,5 @@ export function WeatherFavCard(props: WeatherFavCardProps) {
           </div>
         </div>
       </div>
-    </div>
   );
 }

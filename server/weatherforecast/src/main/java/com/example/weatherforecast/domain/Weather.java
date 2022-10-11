@@ -34,7 +34,11 @@ public class Weather {
 
     @JsonProperty("wind")
     public void setWind(Map<String, Object> windData) {
-        this.windSpeed = (Double) windData.get("speed");
+        if (windData.get("speed").equals(0)) {
+            this.windSpeed = 0.0;
+        } else {
+            this.windSpeed = (Double) windData.get("speed");
+        }
     }
 
     @JsonProperty("name")
