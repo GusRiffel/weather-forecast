@@ -16,7 +16,6 @@ export function WeatherContainer() {
       getFavWeather(cookieContext.currentUser);
     }
   }, []);
-  console.log(favCities);
 
   async function getFavWeather(username: string) {
     try {
@@ -44,7 +43,7 @@ export function WeatherContainer() {
       <div className="flex justify-center">
         {favCities && favCities.map((city) => <WeatherFavCard city={city} />)}
       </div>
-      {weathers && weathers.map((city) => <WeatherCard {...city} />)}
+      {weathers && weathers.map((city, index) => <WeatherCard {...city} key={`weather-card-${index}`} />)}
     </>
   );
 }

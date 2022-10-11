@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface WeatherFavoritesService {
 
-    List<String> listAll(String username);
+    List<String> listAllCitiesByUsername(String username);
 }

@@ -17,12 +17,10 @@ public class WeatherFavoritesController {
     @Autowired
     private WeatherFavoritesServiceImpl weatherFavoritesService;
 
-
     @GetMapping("/{username}")
     public ResponseEntity<List<String>> findAll(@PathVariable String username) {
-        return new ResponseEntity<>(weatherFavoritesService.listAll(username), HttpStatus.OK );
+        return new ResponseEntity<>(weatherFavoritesService.listAllCitiesByUsername(username), HttpStatus.OK );
     }
-
 
     @PostMapping("/create")
     public ResponseEntity<WeatherFavorites> save(@RequestBody @Valid WeatherFavorites weatherFavorites) {

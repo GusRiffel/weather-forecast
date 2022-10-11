@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
   BsFillCloudsFill,
   BsCloudHazeFill,
@@ -16,64 +16,51 @@ interface WeatherFavCardProps {
 }
 
 export function WeatherFavCard(props: WeatherFavCardProps) {
-  const background = "bg-gradient-to-b from-[#99ccff] to-[#66b2ff] rounded-md"
+  const background = "bg-gradient-to-b from-[#99ccff] to-[#66b2ff] rounded-md";
+  const grid = "grid grid-rows-2"
+  const [viewWeather, setViewWeather] = useState<boolean>(false);
+
+  function handleFavClick() {
+    setViewWeather(!viewWeather);
+  }
 
   return (
-      <div
-        className={`mx-3 text-white text-center p-3 ${background}`}
-      >
-        <div className="">
-          <div></div>
-          <div className="">
-            <h1>{props.city}</h1>
-          </div>
-          <div className="">
-            {/* {cookieContext?.currentUser && (
-              <BsStarFill size={24} onClick={() => favoriteHandler(city)} />
-            )} */}
-          </div>
+    <div
+      className={`mx-3 items-center cursor-pointer w-[10rem] text-white text-center px-3 ${background}`}
+      onClick={() => handleFavClick()}
+    >
+      <div>
+        <div className="text-3xl">
+          <h1>{props.city}</h1>
         </div>
-        <div>
-          <div className="">
-            <div>
-              <div className="">
-                <h1>{dayjs().format("MMMM D, YYYY")}</h1>
-              </div>
+      </div>
+      {viewWeather && (
+        <div className={`${viewWeather ? grid : ""}`}>
+          <div>
+            <div className="text-2xl">
+              <h4>18°C</h4>
             </div>
-            <div>
-              <BsFillCloudsFill />
+            <div className="flex justify-center">
+              <BsFillCloudsFill size={32} />
             </div>
             <div className="">
               <h1>Clouds</h1>
             </div>
           </div>
-          <div className="">
-            <div>
-              <div className="">
-                <h1>Temperature</h1>
-              </div>
-              <div className="">
-                <h4>18 °C</h4>
-              </div>
-            </div>
-            <div>
+          <div>
+            <div className="grid grid-cols-2">
               <div className="">
                 <h1>Humidity</h1>
+                <h4>50%</h4>
               </div>
               <div className="">
-                <h4>50 %</h4>
-              </div>
-            </div>
-            <div>
-              <div>
-                <h1 className="">Wind</h1>
-              </div>
-              <div className="">
-                <h4>17 km/h</h4>
+                <h1>Wind</h1>
+                <h4>17km/h</h4>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+    </div>
   );
 }

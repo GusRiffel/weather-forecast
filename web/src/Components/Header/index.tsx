@@ -6,7 +6,7 @@ export function Header() {
   const cookieContext = useContext(CookieContext);
 
   function handleLogOut() {
-    cookieContext?.removeCookie();
+    cookieContext.removeCookie();
   }
 
   return (
@@ -17,9 +17,9 @@ export function Header() {
       </div>
       <div className="text-right text-xl pr-5 cursor-pointer">
         <div>
-          {cookieContext?.currentUser ? (
+          {cookieContext.currentUser ? (
             <div>
-              <p>Welcome {cookieContext?.currentUser}</p>
+              <p>Welcome {cookieContext.currentUser}</p>
               <p onClick={() => handleLogOut()}>Log out</p>
             </div>
           ) : (
