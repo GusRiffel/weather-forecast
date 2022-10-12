@@ -20,7 +20,6 @@ export function WeatherContainer() {
   }, [currentUser]);
 
   useEffect(() => {
-    console.log(weathers.length);
     if (weathers.length > 3) {
       setWeathers(weathers.splice(0, 3));
     }
@@ -111,6 +110,7 @@ export function WeatherContainer() {
             {...weather}
             key={`weather-card-${index}`}
             onFavorite={() => favoriteHandler(weather.city)}
+            isFavorite={isPartOfFavCities(weather.city)}
           />
         ))}
     </>

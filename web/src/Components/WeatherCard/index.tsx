@@ -17,7 +17,8 @@ import { CookieContext } from "../../utils/AuthProvider";
 import axios from "axios";
 
 interface WeatherCardProps extends CityWeather {
-  onFavorite: any
+  onFavorite: any;
+  isFavorite: boolean;
 }
 
 export function WeatherCard({
@@ -25,7 +26,8 @@ export function WeatherCard({
   weatherCondition,
   weatherData,
   windSpeed,
-  onFavorite
+  onFavorite,
+  isFavorite,
 }: WeatherCardProps) {
   const cookieContext = useContext(CookieContext);
 
@@ -35,7 +37,7 @@ export function WeatherCard({
         return <BsFillCloudsFill size={60} />;
       case WeatherCondition.HAZE:
         return <BsCloudHazeFill size={60} />;
-        case WeatherCondition.MIST:
+      case WeatherCondition.MIST:
         return <BsCloudHazeFill size={60} />;
       case WeatherCondition.CLEAR:
         return <BsFillSunFill size={60} />;
@@ -50,8 +52,6 @@ export function WeatherCard({
     }
   }
 
-  
-
   return (
     <div className="flex justify-center py-5 text-white font-bold">
       <div
@@ -64,7 +64,15 @@ export function WeatherCard({
           </div>
           <div className="justify-self-end cursor-pointer">
             {cookieContext?.currentUser && (
-              <BsStarFill size={24} onClick={() => onFavorite(city)} />
+              <BsStarFill
+                className={
+                  isFavorite
+                    ? "text-yellow-300"
+                    : "text-white" + "hover:text-yellow-300"
+                }
+                size={24}
+                onClick={() => onFavorite(city)}
+              />
             )}
           </div>
         </div>

@@ -33,13 +33,12 @@ export function WeatherFavCard(props: WeatherFavCardProps) {
   return (
     <div
       className={`mx-3 items-center cursor-pointer w-[10rem] text-white text-center ${background}`}
-      onClick={() => handleFavClick()}
     >
       <div>
         <div className="flex justify-end">
           <IoClose onClick={() => props.onFavDelete(props.city)}/>
         </div>
-        <div className="text-3xl">
+        <div className="text-3xl" onClick={() => handleFavClick()}>
           <h1>{props.city}</h1>
         </div>
       </div>
