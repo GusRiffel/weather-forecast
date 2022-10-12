@@ -9,13 +9,55 @@ import { WeatherFavCard } from "../../components/WeatherFavCard";
 export function WeatherContainer() {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
   const [favCities, setFavCities] = useState<string[]>([]);
-  const cookieContext = useContext(CookieContext);
+  const {currentUser} = useContext(CookieContext);
 
   useEffect(() => {
-    if (cookieContext?.currentUser) {
-      getFavWeather(cookieContext.currentUser);
+    if (currentUser) {
+      getFavWeather(currentUser);
+    } else {
+      setFavCities([]);
     }
-  }, []);
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (weathers.length >= 3) {
+      weathers.pop();
+    }
+  }, [weathers]);
+
+
+  async function handleDelete(city: string) {
+    try {
+      await axios.delete(`http://localhost:8080/favorites/delete`, {
+        data: { username: currentUser, city },
+      }).then(() => getFavWeather(currentUser));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  async function favoriteHandler(city: string) {
+    try {
+      await axios
+        .post(
+          "http://localhost:8080/favorites/create",
+          { username: currentUser, city: city },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        )
+        .then(() => getFavWeather(currentUser));
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log("error message: ", error.message);
+        return error.message;
+      }
+    }
+  }
 
   async function getFavWeather(username: string) {
     try {
@@ -28,22 +70,40 @@ export function WeatherContainer() {
   }
 
   async function getWeather(city: string) {
+    if (hasAlreadySearched(city) || isPartOfFavCities(city)) {
+      console.log("City already searched");
+      return;
+    }
     try {
       await axios
         .get(`http://localhost:8080/weather/${city}`)
-        .then((res) => setWeathers([...weathers, res.data]));
+        .then((res) => setWeathers([res.data, ...weathers]));
     } catch (error) {
       console.log(error);
     }
+  }
+
+  function hasAlreadySearched(city: string) {
+    return weathers.some((w) => w.city.toUpperCase() === city.toUpperCase());
+  }
+
+  function isPartOfFavCities(city: string) {
+    return favCities.some((c) => c.toUpperCase() === city.toUpperCase());
   }
 
   return (
     <>
       <SearchBar onSubmit={getWeather} />
       <div className="flex justify-center">
-        {favCities && favCities.map((city, index) => <WeatherFavCard city={city} key={`weather-card-${index}`} />)}
+        {favCities &&
+          favCities.map((city, index) => (
+            <WeatherFavCard city={city} key={`weather-card-${index}`} onFavDelete={() => handleDelete(city)} />
+          ))}
       </div>
-      {weathers && weathers.map((city, index) => <WeatherCard {...city} key={`weather-card-${index}`} />)}
+      {weathers &&
+        weathers.map((weather, index) => (
+          <WeatherCard {...weather} key={`weather-card-${index}`} onFavorite={() => favoriteHandler(weather.city)} />
+        ))}
     </>
   );
 }

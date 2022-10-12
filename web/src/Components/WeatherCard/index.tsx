@@ -16,13 +16,16 @@ import { WeatherCondition } from "../../interfaces";
 import { CookieContext } from "../../utils/AuthProvider";
 import axios from "axios";
 
-interface WeatherCardProps extends CityWeather {}
+interface WeatherCardProps extends CityWeather {
+  onFavorite: any
+}
 
 export function WeatherCard({
   city,
   weatherCondition,
   weatherData,
   windSpeed,
+  onFavorite
 }: WeatherCardProps) {
   const cookieContext = useContext(CookieContext);
 
@@ -45,27 +48,7 @@ export function WeatherCard({
     }
   }
 
-  async function favoriteHandler(city: string) {
-    try {
-      await axios
-        .post(
-          "http://localhost:8080/favorites/create",
-          { username: cookieContext?.currentUser, city: city },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-          }
-        )
-        .then((res) => console.log(res.data));
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log("error message: ", error.message);
-        return error.message;
-      }
-    }
-  }
+  
 
   return (
     <div className="flex justify-center py-5 text-white font-bold">
@@ -79,7 +62,7 @@ export function WeatherCard({
           </div>
           <div className="justify-self-end cursor-pointer">
             {cookieContext?.currentUser && (
-              <BsStarFill size={24} onClick={() => favoriteHandler(city)} />
+              <BsStarFill size={24} onClick={() => onFavorite(city)} />
             )}
           </div>
         </div>

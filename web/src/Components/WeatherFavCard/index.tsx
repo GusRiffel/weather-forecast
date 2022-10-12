@@ -15,6 +15,7 @@ import axios from "axios";
 
 interface WeatherFavCardProps {
   city: string;
+  onFavDelete: any;
 }
 
 export function WeatherFavCard(props: WeatherFavCardProps) {
@@ -27,15 +28,7 @@ export function WeatherFavCard(props: WeatherFavCardProps) {
     setViewWeather(!viewWeather);
   }
 
-  async function handleDelete(city: string) {
-    try {
-      await axios.delete(`http://localhost:8080/favorites/delete`, {
-        data: { username: cookieContext.currentUser, city },
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  
 
   return (
     <div
@@ -44,7 +37,7 @@ export function WeatherFavCard(props: WeatherFavCardProps) {
     >
       <div>
         <div className="flex justify-end">
-          <IoClose onClick={() => handleDelete(props.city)}/>
+          <IoClose onClick={() => props.onFavDelete(props.city)}/>
         </div>
         <div className="text-3xl">
           <h1>{props.city}</h1>

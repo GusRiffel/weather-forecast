@@ -7,17 +7,21 @@ type FormValues = {
 };
 
 interface SearchBarProps {
-  onSubmit: (city: string, isFavorite:boolean) => Promise<void>
+  onSubmit: (city: string) => Promise<void>
 }
 
 export function SearchBar({onSubmit}: SearchBarProps) {
-  const {register, handleSubmit, formState: {errors}} = useForm<FormValues>();
+  const {register, handleSubmit, formState: {errors}, reset} = useForm<FormValues>();
   
+  function onCustomSubmit(data:FormValues) {
+    onSubmit(data.city);
+    reset();
+  }
 
 
   return (
     <div className="flex justify-center py-5">
-      <form onSubmit={handleSubmit((data) => onSubmit(data.city, false))}>
+      <form onSubmit={handleSubmit((data) => onCustomSubmit(data))}>
         <label htmlFor="searchBar"></label>
         <input
           {...register("city")}
