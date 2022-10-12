@@ -35,6 +35,8 @@ export function WeatherCard({
         return <BsFillCloudsFill size={60} />;
       case WeatherCondition.HAZE:
         return <BsCloudHazeFill size={60} />;
+        case WeatherCondition.MIST:
+        return <BsCloudHazeFill size={60} />;
       case WeatherCondition.CLEAR:
         return <BsFillSunFill size={60} />;
       case WeatherCondition.DRIZZLE:

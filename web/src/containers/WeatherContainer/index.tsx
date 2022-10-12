@@ -9,7 +9,7 @@ import { WeatherFavCard } from "../../components/WeatherFavCard";
 export function WeatherContainer() {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
   const [favCities, setFavCities] = useState<string[]>([]);
-  const {currentUser} = useContext(CookieContext);
+  const { currentUser } = useContext(CookieContext);
 
   useEffect(() => {
     if (currentUser) {
@@ -20,22 +20,23 @@ export function WeatherContainer() {
   }, [currentUser]);
 
   useEffect(() => {
-    if (weathers.length >= 3) {
-      weathers.pop();
+    console.log(weathers.length);
+    if (weathers.length > 3) {
+      setWeathers(weathers.splice(0, 3));
     }
   }, [weathers]);
 
-
   async function handleDelete(city: string) {
     try {
-      await axios.delete(`http://localhost:8080/favorites/delete`, {
-        data: { username: currentUser, city },
-      }).then(() => getFavWeather(currentUser));
+      await axios
+        .delete(`http://localhost:8080/favorites/delete`, {
+          data: { username: currentUser, city },
+        })
+        .then(() => getFavWeather(currentUser));
     } catch (error) {
       console.log(error);
     }
   }
-
 
   async function favoriteHandler(city: string) {
     try {
@@ -97,12 +98,20 @@ export function WeatherContainer() {
       <div className="flex justify-center">
         {favCities &&
           favCities.map((city, index) => (
-            <WeatherFavCard city={city} key={`weather-card-${index}`} onFavDelete={() => handleDelete(city)} />
+            <WeatherFavCard
+              city={city}
+              key={`weather-card-${index}`}
+              onFavDelete={() => handleDelete(city)}
+            />
           ))}
       </div>
       {weathers &&
         weathers.map((weather, index) => (
-          <WeatherCard {...weather} key={`weather-card-${index}`} onFavorite={() => favoriteHandler(weather.city)} />
+          <WeatherCard
+            {...weather}
+            key={`weather-card-${index}`}
+            onFavorite={() => favoriteHandler(weather.city)}
+          />
         ))}
     </>
   );
