@@ -68,7 +68,7 @@ export function WeatherCard({
                 className={
                   isFavorite
                     ? "text-yellow-300"
-                    : "text-white" + "hover:text-yellow-300"
+                    : "text-white hover:text-yellow-300"
                 }
                 size={24}
                 onClick={() => onFavorite(city)}
