@@ -9,7 +9,7 @@ import { WeatherFavCard } from "../../components/WeatherFavCard";
 export function WeatherContainer() {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
   const [favCities, setFavCities] = useState<string[]>([]);
-  const { currentUser } = useContext(CookieContext);
+  const { currentUser, getCookie } = useContext(CookieContext);
 
   useEffect(() => {
     if (currentUser) {
@@ -29,6 +29,10 @@ export function WeatherContainer() {
     try {
       await axios
         .delete(`http://localhost:8080/favorites/delete`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getCookie().refresh_token}`,
+          },
           data: { username: currentUser, city },
         })
         .then(() => getFavWeather(currentUser));
@@ -47,6 +51,7 @@ export function WeatherContainer() {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
+              Authorization: `Bearer ${getCookie().refresh_token}`,
             },
           }
         )
@@ -62,7 +67,11 @@ export function WeatherContainer() {
   async function getFavWeather(username: string) {
     try {
       await axios
-        .get(`http://localhost:8080/favorites/${username}`)
+        .get(`http://localhost:8080/favorites/${username}`, {
+          headers: {
+            Authorization: `Bearer ${getCookie().refresh_token}`,
+          },
+        })
         .then((res) => setFavCities(res.data));
     } catch (error) {
       console.log(error);

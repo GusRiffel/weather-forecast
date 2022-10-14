@@ -68,7 +68,7 @@ public class UserController {
                 User user = userService.getByUsername(username);
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 30 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .sign(algorithm);
                 Map<String, String> tokens = new HashMap<>();
