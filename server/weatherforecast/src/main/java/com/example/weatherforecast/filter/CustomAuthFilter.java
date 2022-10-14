@@ -1,8 +1,8 @@
 package com.example.weatherforecast.filter;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.weatherforecast.domain.User;
+import com.example.weatherforecast.utils.TokenGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
@@ -17,7 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,19 +46,11 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
             ServletException {
         org.springframework.security.core.userdetails.User user =
                 (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
+
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-        String access_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 10 * 1000))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
 
-        String refresh_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
-
+        String access_token = TokenGenerator.createAccessToken(request, user, algorithm);
+        String refresh_token = TokenGenerator.createRefreshToken(request, user, algorithm);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("username", user.getUsername());
         tokens.put("access_token", access_token);
