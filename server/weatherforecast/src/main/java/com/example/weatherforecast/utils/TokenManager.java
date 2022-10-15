@@ -12,9 +12,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 @Component
 public class TokenManager {
@@ -26,23 +24,34 @@ public class TokenManager {
         jwtSecret = secret;
     }
 
-    public static Algorithm createAlgorithm() {return Algorithm.HMAC256(jwtSecret.getBytes());}
+    public static Algorithm createAlgorithm() {
+        return Algorithm.HMAC256(jwtSecret.getBytes());
+    }
 
-    public static String createAccessToken(HttpServletRequest request, User user) {
+    private static String createAccessToken(HttpServletRequest request, User user) {
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 10 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(createAlgorithm());
     }
 
-    public static String createRefreshToken(HttpServletRequest request, User user) {
+    private static String createRefreshToken(HttpServletRequest request, User user) {
         return JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(createAlgorithm());
     }
+
+    public static Map<String, String> createNewToken(HttpServletRequest request, User user) {
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("username", user.getUsername());
+        tokens.put("access_token", TokenManager.createAccessToken(request, user));
+        tokens.put("refresh_token", TokenManager.createRefreshToken(request, user));
+        return tokens;
+    }
+
 
     public static void verifyToken(String authHeader) {
         JWTVerifier verifier = JWT.require(createAlgorithm()).build();
@@ -52,7 +61,6 @@ public class TokenManager {
                 new UsernamePasswordAuthenticationToken(decodedJWT.getSubject(), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
-
 
 
 }

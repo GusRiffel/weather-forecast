@@ -45,12 +45,7 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
             ServletException {
         org.springframework.security.core.userdetails.User user =
                 (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
-
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("username", user.getUsername());
-        tokens.put("access_token", TokenManager.createAccessToken(request, user));
-        tokens.put("refresh_token", TokenManager.createRefreshToken(request, user));
         response.setContentType(APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+        new ObjectMapper().writeValue(response.getOutputStream(), TokenManager.createNewToken(request, user));
     }
 }
