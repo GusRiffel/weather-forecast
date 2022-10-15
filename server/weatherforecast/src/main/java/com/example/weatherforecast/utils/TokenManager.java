@@ -24,7 +24,7 @@ public class TokenManager {
         jwtSecret = secret;
     }
 
-    public static Algorithm createAlgorithm() {
+    private static Algorithm createAlgorithm() {
         return Algorithm.HMAC256(jwtSecret.getBytes());
     }
 
@@ -52,10 +52,20 @@ public class TokenManager {
         return tokens;
     }
 
+    public static String refreshAccessToken(com.example.weatherforecast.domain.User user, HttpServletRequest request) {
+        return JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 30 * 1000))
+                .withIssuer(request.getRequestURL().toString())
+                .sign(createAlgorithm());
+    }
 
-    public static void verifyToken(String authHeader) {
+    public static DecodedJWT verifyToken(String authHeader) {
         JWTVerifier verifier = JWT.require(createAlgorithm()).build();
-        DecodedJWT decodedJWT = verifier.verify(authHeader.substring("Bearer ".length()));
+        return verifier.verify(authHeader.substring("Bearer ".length()));
+    }
+
+    public static void setUserToSpringSecurity(DecodedJWT decodedJWT) {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(decodedJWT.getSubject(), null, authorities);

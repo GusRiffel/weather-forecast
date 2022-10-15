@@ -1,12 +1,10 @@
 package com.example.weatherforecast.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.weatherforecast.domain.User;
 import com.example.weatherforecast.dto.UserDto;
 import com.example.weatherforecast.service.UserService;
+import com.example.weatherforecast.utils.TokenManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -29,11 +30,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("user")
 public class UserController {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    public UserController(ModelMapper modelMapper, UserService userService) {
+        this.modelMapper = modelMapper;
+        this.userService = userService;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<UserDto>> listAll() {
@@ -46,7 +49,6 @@ public class UserController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
-    @CrossOrigin(origins = "http://127.0.0.1:5173/")
     public ResponseEntity<UserDto> findById(@PathVariable UUID id) {
         User user = userService.getById(id);
         UserDto userResponse = modelMapper.map(user, UserDto.class);
@@ -55,25 +57,16 @@ public class UserController {
     }
 
     @GetMapping("/token/refresh")
-    @CrossOrigin(origins = "http://127.0.0.1:5173/")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authHeader = request.getHeader(AUTHORIZATION);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             try {
-                String refresh_token = authHeader.substring("Bearer ".length());
-                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-                JWTVerifier verifier = JWT.require(algorithm).build();
-                DecodedJWT decodedJWT = verifier.verify(refresh_token);
-                String username = decodedJWT.getSubject();
-                User user = userService.getByUsername(username);
-                String access_token = JWT.create()
-                        .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 30 * 1000))
-                        .withIssuer(request.getRequestURL().toString())
-                        .sign(algorithm);
+                DecodedJWT decodedJWT = TokenManager.verifyToken(authHeader);
+                User user = userService.getByUsername(decodedJWT.getSubject());
+
                 Map<String, String> tokens = new HashMap<>();
-                tokens.put("access_token", access_token);
-                tokens.put("refresh_token", refresh_token);
+                tokens.put("access_token", TokenManager.refreshAccessToken(user, request));
+                tokens.put("refresh_token", authHeader.substring("Bearer ".length()));
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception e) {
@@ -90,7 +83,6 @@ public class UserController {
     }
 
     @PostMapping("/createuser")
-    @CrossOrigin(origins = "http://127.0.0.1:5173/")
     public ResponseEntity<UserDto> save(@RequestBody @Valid UserDto userDto) {
         User userRequest = modelMapper.map(userDto, User.class);
         User user = userService.save(userRequest);
@@ -100,7 +92,6 @@ public class UserController {
     }
 
     @PutMapping("update/{id}")
-    @CrossOrigin(origins = "http://127.0.0.1:5173/")
     public ResponseEntity<UserDto> update(@PathVariable UUID id, @RequestBody UserDto userDto) {
         User userRequest = modelMapper.map(userDto, User.class);
         User user = userService.update(id, userRequest);
@@ -110,7 +101,6 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @CrossOrigin(origins = "http://127.0.0.1:5173/")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

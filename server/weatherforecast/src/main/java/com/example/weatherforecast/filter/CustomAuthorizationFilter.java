@@ -1,5 +1,6 @@
 package com.example.weatherforecast.filter;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.weatherforecast.utils.TokenManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,7 +27,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             String authHeader = request.getHeader(AUTHORIZATION);
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 try {
-                    TokenManager.verifyToken(authHeader);
+                    DecodedJWT decodedJWT = TokenManager.verifyToken(authHeader);
+                    TokenManager.setUserToSpringSecurity(decodedJWT);
                     filterChain.doFilter(request, response);
                 } catch (Exception e) {
                     response.setHeader("error", e.getMessage());

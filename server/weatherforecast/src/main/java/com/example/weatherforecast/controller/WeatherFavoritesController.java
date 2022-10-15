@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController()
+@RestController
 @RequestMapping("/favorites")
 public class WeatherFavoritesController {
 
-    @Autowired
-    private WeatherFavoritesService weatherFavoritesService;
+    private final WeatherFavoritesService weatherFavoritesService;
+
+    public WeatherFavoritesController(WeatherFavoritesService weatherFavoritesService) {
+        this.weatherFavoritesService = weatherFavoritesService;
+    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{username}")

@@ -11,8 +11,12 @@ import java.util.List;
 @Service
 public class WeatherFavoritesService {
 
-    @Autowired
+    final
     WeatherFavoritesRepository weatherFavoritesRepository;
+
+    public WeatherFavoritesService(WeatherFavoritesRepository weatherFavoritesRepository) {
+        this.weatherFavoritesRepository = weatherFavoritesRepository;
+    }
 
     public List<String> listAllCitiesByUsername(String username) {
         return weatherFavoritesRepository.findAllCitiesByUsername(username);

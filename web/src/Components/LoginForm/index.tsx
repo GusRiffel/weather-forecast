@@ -35,7 +35,7 @@ export function LoginForm() {
         .then((res) => cookieContext?.createCookie(res.data));
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log("error message: ", error.message);
+        console.log("error message: ", error);
         return error.message;
       }
     }
