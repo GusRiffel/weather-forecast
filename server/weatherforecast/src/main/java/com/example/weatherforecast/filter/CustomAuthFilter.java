@@ -1,8 +1,7 @@
 package com.example.weatherforecast.filter;
 
-import com.auth0.jwt.algorithms.Algorithm;
 import com.example.weatherforecast.domain.User;
-import com.example.weatherforecast.utils.TokenGenerator;
+import com.example.weatherforecast.utils.TokenManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.SneakyThrows;
@@ -47,14 +46,10 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
         org.springframework.security.core.userdetails.User user =
                 (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
 
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-
-        String access_token = TokenGenerator.createAccessToken(request, user, algorithm);
-        String refresh_token = TokenGenerator.createRefreshToken(request, user, algorithm);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("username", user.getUsername());
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
+        tokens.put("access_token", TokenManager.createAccessToken(request, user));
+        tokens.put("refresh_token", TokenManager.createRefreshToken(request, user));
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
