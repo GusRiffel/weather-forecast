@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.UUID;
 
 @Getter
@@ -17,8 +18,10 @@ public class WeatherFavorites {
     private UUID id;
 
     @Column(nullable = false)
+    @NotEmpty
     private String city;
 
     @Column(nullable = false)
+    @NotEmpty
     private String username;
 }

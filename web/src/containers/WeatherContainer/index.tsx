@@ -10,15 +10,22 @@ export function WeatherContainer() {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
   const [favoriteCities, setFavoriteCities] = useState<string[]>([]);
   const [favoriteWeather, setFavoriteWeather] = useState<CityWeather[]>([]);
+  const [postData, setPostData] = useState();
   const { currentUser, getCookie } = useContext(CookieContext);
 
   useEffect(() => {
     if (currentUser) {
-      handleFavoriteWeather(currentUser);
+      handleFavoriteCity(currentUser);
     } else {
       setFavoriteCities([]);
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (currentUser && !favoriteCities.length) {
+      handleFavoriteCity(currentUser);
+    }
+  }, [favoriteCities]);
 
   useEffect(() => {
     if (weathers.length > 3) {
@@ -26,7 +33,11 @@ export function WeatherContainer() {
     }
   }, [weathers]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (favoriteCities.length) {
+      handleFavoriteWeather();
+    }
+  }, [favoriteCities]);
 
   const deleteFavorite = async (city: string) => {
     try {
@@ -46,7 +57,7 @@ export function WeatherContainer() {
 
   const createFavorite = async (city: string) => {
     try {
-      await axios
+      return await axios
         .post(
           "http://localhost:8080/favorites/create",
           { username: currentUser, city: city },
@@ -58,7 +69,7 @@ export function WeatherContainer() {
             },
           }
         )
-        .then(() => getFavoriteCities(currentUser));
+        .then((res) => res.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log("error message: ", error.message);
@@ -82,10 +93,10 @@ export function WeatherContainer() {
   };
 
   const getWeatherByCity = async (city: string) => {
-    if (hasAlreadySearched(city) || isPartOfFavCities(city)) {
-      console.log("City already searched");
-      return;
-    }
+    // if (hasAlreadySearched(city) || isPartOfFavCities(city)) {
+    //   console.log("City already searched");
+    //   return;
+    // }
     try {
       return await axios
         .get(`http://localhost:8080/weather/${city}`)
@@ -95,12 +106,27 @@ export function WeatherContainer() {
     }
   };
 
-  const handleFavoriteWeather = async (username: string) => {
-    const favCities: string[] = await getFavoriteCities(username);
+  const handleAddFavoriteCity = async (city: string) => {
+    const data = await createFavorite(city);
+    if (data.id) {
+      setFavoriteCities([]);
+    }
+  };
+
+  const handleFavoriteCity = async (username: string) => {
+    const data: string[] = await getFavoriteCities(username);
+    if (data.length) {
+      setFavoriteCities([...data]);
+    }
+  };
+
+  const handleFavoriteWeather = async () => {
+    console.log(favoriteCities);
     const data: CityWeather[] = await Promise.all(
-      favCities.map((city) => getWeatherByCity(city))
+      favoriteCities.map((city) => getWeatherByCity(city))
     );
-    setFavoriteWeather([...data, ...favoriteWeather]);
+    console.log(data);
+    setFavoriteWeather([...data]);
   };
 
   const handleWeatherSearch = async (city: string) => {
@@ -148,7 +174,7 @@ export function WeatherContainer() {
           <WeatherCard
             {...weather}
             key={`weather-card-${index}`}
-            onFavorite={() => createFavorite(weather.city)}
+            onFavorite={() => handleAddFavoriteCity(weather.city)}
             isFavorite={isPartOfFavCities(weather.city)}
           />
         ))}

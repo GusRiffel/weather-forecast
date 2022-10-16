@@ -6,6 +6,7 @@ import com.example.weatherforecast.repository.WeatherFavoritesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -27,6 +28,7 @@ public class WeatherFavoritesService {
                 deleteDto.getCity()));
     }
 
+    @Transactional
     public WeatherFavorites save(WeatherFavorites weatherFavorites) {
         return weatherFavoritesRepository.save(weatherFavorites);
     }
