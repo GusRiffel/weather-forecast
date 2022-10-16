@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { BsFillCloudsFill } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
 import { CityWeather } from "../../interfaces";
-import { CookieContext } from "../../utils/AuthProvider";
+import { CookieContext } from "../../context/AuthContext";
 
 interface WeatherFavCardProps extends CityWeather {
   city: string;

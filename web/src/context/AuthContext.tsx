@@ -20,7 +20,7 @@ interface AuthProviderProps {
 
 export const CookieContext = createContext<CookieContextType>({} as CookieContextType);
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthContext({ children }: AuthProviderProps) {
   const cookies = new Cookies();
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState("");

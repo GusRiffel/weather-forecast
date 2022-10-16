@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 
 import axios from "axios";
 
-import { CookieContext } from "../../utils/AuthProvider";
+import { CookieContext } from "../../context/AuthContext";
 
 type FormValues = {
   username: string;

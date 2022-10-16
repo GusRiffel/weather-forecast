@@ -7,7 +7,7 @@ import { IoSnowSharp, IoThunderstormSharp } from "react-icons/io5";
 import * as dayjs from "dayjs";
 
 import { CityWeather, WeatherCondition } from "../../interfaces";
-import { CookieContext } from "../../utils/AuthProvider";
+import { CookieContext } from "../../context/AuthContext";
 
 interface WeatherCardProps extends CityWeather {
   onFavorite: any;

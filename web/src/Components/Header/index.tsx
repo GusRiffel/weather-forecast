@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { CookieContext } from "../../utils/AuthProvider";
+import { CookieContext } from "../../context/AuthContext";
 
 export function Header() {
   const cookieContext = useContext(CookieContext);

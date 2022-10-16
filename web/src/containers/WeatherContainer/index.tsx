@@ -4,7 +4,7 @@ import { SearchBar } from "../../components/SearchBar";
 import { WeatherCard } from "../../components/WeatherCard";
 import { WeatherFavCard } from "../../components/WeatherFavCard";
 import { CityWeather } from "../../interfaces";
-import { CookieContext } from "../../utils/AuthProvider";
+import { CookieContext } from "../../context/AuthContext";
 
 export function WeatherContainer() {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
@@ -128,7 +128,6 @@ export function WeatherContainer() {
     const data: CityWeather = await getWeatherByCity(city);
     if (data.city) {
       setWeathers([data, ...weathers]);
-    } else {
     }
   };
 
