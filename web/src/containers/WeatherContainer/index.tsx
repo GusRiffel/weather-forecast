@@ -1,15 +1,21 @@
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { SearchBar } from "../../components/SearchBar";
 import { WeatherCard } from "../../components/WeatherCard";
 import { WeatherFavCard } from "../../components/WeatherFavCard";
-import { CityWeather } from "../../interfaces";
 import { CookieContext } from "../../context/AuthContext";
+import { useWeatherAPI } from "../../hooks/useWeatherAPI";
+import { CityWeather } from "../../interfaces";
 
 export function WeatherContainer() {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
   const [favoriteWeather, setFavoriteWeather] = useState<CityWeather[]>([]);
   const { currentUser, getCookie } = useContext(CookieContext);
+  const {
+    deleteFavorite,
+    createFavorite,
+    getFavoriteCities,
+    getWeatherByCity,
+  } = useWeatherAPI();
 
   useEffect(() => {
     if (currentUser) {
@@ -25,69 +31,6 @@ export function WeatherContainer() {
       setWeathers(weathers.splice(0, 3));
     }
   }, [weathers]);
-
-  const deleteFavorite = async (city: string) => {
-    try {
-      return await axios
-        .delete(`http://localhost:8080/favorites/delete`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getCookie().refresh_token}`,
-          },
-          data: { username: currentUser, city },
-        })
-        .then((res) => res.status);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const createFavorite = async (city: string) => {
-    try {
-      return await axios
-        .post(
-          "http://localhost:8080/favorites/create",
-          { username: currentUser, city: city },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${getCookie().refresh_token}`,
-            },
-          }
-        )
-        .then((res) => res.data);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log("error message: ", error.message);
-        return error.message;
-      }
-    }
-  };
-
-  const getFavoriteCities = async (username: string) => {
-    try {
-      return await axios
-        .get(`http://localhost:8080/favorites/${username}`, {
-          headers: {
-            Authorization: `Bearer ${getCookie().refresh_token}`,
-          },
-        })
-        .then((res) => res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getWeatherByCity = async (city: string) => {
-    try {
-      return await axios
-        .get(`http://localhost:8080/weather/${city}`)
-        .then((res) => res.data);
-    } catch (error) {
-      return error;
-    }
-  };
 
   const handleDeleteFavoriteCity = async (city: string) => {
     const data = await deleteFavorite(city);
