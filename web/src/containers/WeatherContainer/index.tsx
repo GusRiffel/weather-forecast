@@ -8,24 +8,17 @@ import { CookieContext } from "../../utils/AuthProvider";
 
 export function WeatherContainer() {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
-  const [favoriteCities, setFavoriteCities] = useState<string[]>([]);
   const [favoriteWeather, setFavoriteWeather] = useState<CityWeather[]>([]);
-  const [postData, setPostData] = useState();
   const { currentUser, getCookie } = useContext(CookieContext);
 
   useEffect(() => {
     if (currentUser) {
-      handleFavoriteCity(currentUser);
+      handleFavoriteWeather(currentUser);
     } else {
-      setFavoriteCities([]);
+      setFavoriteWeather([]);
+      setWeathers([]);
     }
   }, [currentUser]);
-
-  useEffect(() => {
-    if (currentUser && !favoriteCities.length) {
-      handleFavoriteCity(currentUser);
-    }
-  }, [favoriteCities]);
 
   useEffect(() => {
     if (weathers.length > 3) {
@@ -33,15 +26,9 @@ export function WeatherContainer() {
     }
   }, [weathers]);
 
-  useEffect(() => {
-    if (favoriteCities.length) {
-      handleFavoriteWeather();
-    }
-  }, [favoriteCities]);
-
   const deleteFavorite = async (city: string) => {
     try {
-      await axios
+      return await axios
         .delete(`http://localhost:8080/favorites/delete`, {
           headers: {
             "Content-Type": "application/json",
@@ -49,7 +36,7 @@ export function WeatherContainer() {
           },
           data: { username: currentUser, city },
         })
-        .then(() => getFavoriteCities(currentUser));
+        .then((res) => res.status);
     } catch (error) {
       console.log(error);
     }
@@ -93,10 +80,6 @@ export function WeatherContainer() {
   };
 
   const getWeatherByCity = async (city: string) => {
-    // if (hasAlreadySearched(city) || isPartOfFavCities(city)) {
-    //   console.log("City already searched");
-    //   return;
-    // }
     try {
       return await axios
         .get(`http://localhost:8080/weather/${city}`)
@@ -106,35 +89,46 @@ export function WeatherContainer() {
     }
   };
 
+  const handleDeleteFavoriteCity = async (city: string) => {
+    const data = await deleteFavorite(city);
+    if (data === 204) {
+      setFavoriteWeather([
+        ...favoriteWeather.filter(
+          (w) => w.city.toUpperCase() !== city.toUpperCase()
+        ),
+      ]);
+    }
+  };
+
   const handleAddFavoriteCity = async (city: string) => {
     const data = await createFavorite(city);
     if (data.id) {
-      setFavoriteCities([]);
+      const newFavWeather = weathers.find(
+        (w) => w.city.toUpperCase() === city.toUpperCase()
+      );
+      if (newFavWeather) {
+        setFavoriteWeather([...favoriteWeather, newFavWeather]);
+      }
     }
   };
 
-  const handleFavoriteCity = async (username: string) => {
-    const data: string[] = await getFavoriteCities(username);
-    if (data.length) {
-      setFavoriteCities([...data]);
-    }
-  };
-
-  const handleFavoriteWeather = async () => {
-    console.log(favoriteCities);
+  const handleFavoriteWeather = async (username: string) => {
+    const favCities: string[] = await getFavoriteCities(username);
     const data: CityWeather[] = await Promise.all(
-      favoriteCities.map((city) => getWeatherByCity(city))
+      favCities.map((city) => getWeatherByCity(city))
     );
-    console.log(data);
     setFavoriteWeather([...data]);
   };
 
   const handleWeatherSearch = async (city: string) => {
+    if (hasAlreadySearched(city) || isPartOfFavCities(city)) {
+      console.log("City already searched");
+      return;
+    }
     const data: CityWeather = await getWeatherByCity(city);
     if (data.city) {
       setWeathers([data, ...weathers]);
     } else {
-      console.log(data);
     }
   };
 
@@ -143,7 +137,9 @@ export function WeatherContainer() {
   }
 
   function isPartOfFavCities(city: string) {
-    return favoriteCities.some((c) => c.toUpperCase() === city.toUpperCase());
+    return favoriteWeather.some(
+      (w) => w.city.toUpperCase() === city.toUpperCase()
+    );
   }
 
   return (
@@ -155,20 +151,10 @@ export function WeatherContainer() {
             <WeatherFavCard
               {...favoriteWeather}
               key={`weather-fav-card-${index}`}
-              onFavDelete={() => deleteFavorite(favoriteWeather.city)}
+              onFavDelete={() => handleDeleteFavoriteCity(favoriteWeather.city)}
             />
           ))}
       </div>
-      {/* <div className="flex justify-center">
-        {favoriteCities &&
-          favoriteCities.map((city, index) => (
-            <WeatherFavCard
-              city={city}
-              key={`weather-fav-card-${index}`}
-              onFavDelete={() => deleteFavorite(city)}
-            />
-          ))}
-      </div> */}
       {weathers &&
         weathers.map((weather, index) => (
           <WeatherCard
