@@ -1,20 +1,13 @@
 import { useContext } from "react";
 import {
-  BsFillCloudsFill,
-  BsCloudHazeFill,
-  BsFillSunFill,
-  BsCloudDrizzleFill,
-  BsFillCloudRainFill,
-  BsStarFill,
+  BsCloudDrizzleFill, BsCloudHazeFill, BsFillCloudRainFill, BsFillCloudsFill, BsFillSunFill, BsStarFill
 } from "react-icons/bs";
 import { IoSnowSharp, IoThunderstormSharp } from "react-icons/io5";
 
 import * as dayjs from "dayjs";
 
-import { CityWeather } from "../../interfaces";
-import { WeatherCondition } from "../../interfaces";
+import { CityWeather, WeatherCondition } from "../../interfaces";
 import { CookieContext } from "../../utils/AuthProvider";
-import axios from "axios";
 
 interface WeatherCardProps extends CityWeather {
   onFavorite: any;

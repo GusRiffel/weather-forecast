@@ -7,7 +7,7 @@ type FormValues = {
 };
 
 interface SearchBarProps {
-  onSubmit: (city: string) => Promise<void>
+  onSubmit: (city: string) => void
 }
 
 export function SearchBar({onSubmit}: SearchBarProps) {
