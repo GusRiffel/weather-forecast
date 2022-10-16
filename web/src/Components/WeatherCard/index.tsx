@@ -1,13 +1,11 @@
 import { useContext } from "react";
-import {
-  BsCloudDrizzleFill, BsCloudHazeFill, BsFillCloudRainFill, BsFillCloudsFill, BsFillSunFill, BsStarFill
-} from "react-icons/bs";
-import { IoSnowSharp, IoThunderstormSharp } from "react-icons/io5";
+import { BsStarFill } from "react-icons/bs";
+import { getIconByWeatherCondition } from "../../utils/iconHelpers";
 
 import * as dayjs from "dayjs";
 
-import { CityWeather, WeatherCondition } from "../../interfaces";
 import { CookieContext } from "../../context/AuthContext";
+import { CityWeather } from "../../interfaces";
 
 interface WeatherCardProps extends CityWeather {
   onFavorite: any;
@@ -23,27 +21,6 @@ export function WeatherCard({
   isFavorite,
 }: WeatherCardProps) {
   const cookieContext = useContext(CookieContext);
-
-  function setWeatherIcon() {
-    switch (weatherCondition) {
-      case WeatherCondition.CLOUDS:
-        return <BsFillCloudsFill size={60} />;
-      case WeatherCondition.HAZE:
-        return <BsCloudHazeFill size={60} />;
-      case WeatherCondition.MIST:
-        return <BsCloudHazeFill size={60} />;
-      case WeatherCondition.CLEAR:
-        return <BsFillSunFill size={60} />;
-      case WeatherCondition.DRIZZLE:
-        return <BsCloudDrizzleFill size={60} />;
-      case WeatherCondition.RAIN:
-        return <BsFillCloudRainFill size={60} />;
-      case WeatherCondition.SNOW:
-        return <IoSnowSharp size={60} />;
-      case WeatherCondition.THUNDERSTORM:
-        return <IoThunderstormSharp size={60} />;
-    }
-  }
 
   return (
     <div className="flex justify-center py-5 text-white font-bold">
@@ -76,7 +53,7 @@ export function WeatherCard({
                 <h1>{dayjs().format("MMMM D, YYYY")}</h1>
               </div>
             </div>
-            <div>{setWeatherIcon()}</div>
+            <div>{getIconByWeatherCondition(weatherCondition)}</div>
             <div className="text-2xl">
               <h1>{weatherCondition}</h1>
             </div>

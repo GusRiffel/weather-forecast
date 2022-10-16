@@ -9,7 +9,7 @@ import { CityWeather } from "../../interfaces";
 export function WeatherContainer() {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
   const [favoriteWeather, setFavoriteWeather] = useState<CityWeather[]>([]);
-  const { currentUser, getCookie } = useContext(CookieContext);
+  const { currentUser } = useContext(CookieContext);
   const {
     deleteFavorite,
     createFavorite,

@@ -1,18 +1,12 @@
-import { useContext, useState } from "react";
-import { BsFillCloudsFill } from "react-icons/bs";
+import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { CityWeather } from "../../interfaces";
-import { CookieContext } from "../../context/AuthContext";
+import { getIconByWeatherCondition } from "../../utils/iconHelpers";
 
 interface WeatherFavCardProps extends CityWeather {
   city: string;
   onFavDelete: any;
 }
-
-// interface WeatherFavCardProps {
-//   city: string;
-//   onFavDelete: any;
-// }
 
 export function WeatherFavCard({
   weatherCondition,
@@ -24,7 +18,6 @@ export function WeatherFavCard({
   const background = "bg-gradient-to-b from-[#99ccff] to-[#66b2ff] rounded-md";
   const grid = "grid grid-rows-2";
   const [viewWeather, setViewWeather] = useState<boolean>(true);
-  const cookieContext = useContext(CookieContext);
 
   function handleFavClick() {
     setViewWeather(!viewWeather);
@@ -49,7 +42,7 @@ export function WeatherFavCard({
               <h4>{Math.round(Number(weatherData.temp))}°C</h4>
             </div>
             <div className="flex justify-center">
-              <BsFillCloudsFill size={32} />
+              <div>{getIconByWeatherCondition(weatherCondition)}</div>
             </div>
             <div className="">
               <h1>{weatherCondition}</h1>
