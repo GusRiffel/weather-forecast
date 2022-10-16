@@ -1,40 +1,37 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { CookieContext } from "../context/AuthContext";
+import { service } from "./../api/service";
 
 export const useWeatherAPI = () => {
   const { currentUser, getCookie } = useContext(CookieContext);
 
   const getWeatherByCity = async (city: string) => {
     try {
-      return await axios
-        .get(`http://localhost:8080/weather/${city}`)
-        .then((res) => res.data);
+      return await service.get(`/weather/${city}`).then((res) => res.data);
     } catch (error) {
       return error;
     }
   };
 
-
   const getFavoriteCities = async (username: string) => {
     try {
-      return await axios
-        .get(`http://localhost:8080/favorites/${username}`, {
+      return await service
+        .get(`/favorites/${username}`, {
           headers: {
             Authorization: `Bearer ${getCookie().refresh_token}`,
           },
         })
         .then((res) => res.data);
     } catch (error) {
-      console.log(error);
+      return error;
     }
   };
 
   const createFavorite = async (city: string) => {
     try {
-      return await axios
+      return await service
         .post(
-          "http://localhost:8080/favorites/create",
+          "/favorites/create",
           { username: currentUser, city: city },
           {
             headers: {
@@ -46,17 +43,14 @@ export const useWeatherAPI = () => {
         )
         .then((res) => res.data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log("error message: ", error.message);
-        return error.message;
-      }
+      return error;
     }
   };
 
   const deleteFavorite = async (city: string) => {
     try {
-      return await axios
-        .delete(`http://localhost:8080/favorites/delete`, {
+      return await service
+        .delete(`/favorites/delete`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getCookie().refresh_token}`,
@@ -65,9 +59,14 @@ export const useWeatherAPI = () => {
         })
         .then((res) => res.status);
     } catch (error) {
-      console.log(error);
+      return error;
     }
   };
 
-  return {getWeatherByCity, deleteFavorite, createFavorite, getFavoriteCities}
+  return {
+    getWeatherByCity,
+    deleteFavorite,
+    createFavorite,
+    getFavoriteCities,
+  };
 };
