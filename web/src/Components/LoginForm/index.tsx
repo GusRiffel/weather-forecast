@@ -1,48 +1,28 @@
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
-
-import axios from "axios";
+import { LoginFormValues } from "../../interfaces";
 
 import { CookieContext } from "../../context/AuthContext";
-
-type FormValues = {
-  username: string;
-  password: string;
-};
+import { useUser } from "../../hooks/useUser";
 
 export function LoginForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>();
-  
-  const cookieContext = useContext(CookieContext);
-  
-  async function loginUser(data: FormValues) {
-    try {
-      await axios
-        .post(
-          "http://localhost:8080/login",
-          { username: data.username, password: data.password },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-          }
-        )
-        .then((res) => cookieContext?.createCookie(res.data));
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log("error message: ", error);
-        return error.message;
-      }
+  } = useForm<LoginFormValues>();
+  const { login } = useUser();
+  const { createCookie } = useContext(CookieContext);
+
+  const handleLogin = async (data: LoginFormValues) => {
+    const response = await login(data);
+    if (response.access_token) {
+      createCookie(response);
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit((data) => loginUser(data))}>
+    <form onSubmit={handleSubmit((data) => handleLogin(data))}>
       <input {...register("username")} placeholder="Type your username" />
       <input {...register("password")} placeholder="Type your password" />
       <button type="submit">Submit</button>

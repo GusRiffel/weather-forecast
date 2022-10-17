@@ -3,7 +3,6 @@ package com.example.weatherforecast.service;
 import com.example.weatherforecast.domain.WeatherFavorites;
 import com.example.weatherforecast.dto.WeatherFavoriteDeleteDto;
 import com.example.weatherforecast.repository.WeatherFavoritesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

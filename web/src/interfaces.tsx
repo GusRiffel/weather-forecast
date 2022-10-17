@@ -12,6 +12,12 @@ export interface CityWeather {
   windSpeed: number;
 }
 
+export interface LoginFormValues {
+  username: string;
+  password: string;
+}
+
+
 export enum WeatherCondition {
   THUNDERSTORM = "Thunderstorm",
   DRIZZLE = "Drizzle",
