@@ -17,6 +17,9 @@ export interface LoginFormValues {
   password: string;
 }
 
+export interface SearchWeather {
+  city: string;
+}
 
 export enum WeatherCondition {
   THUNDERSTORM = "Thunderstorm",

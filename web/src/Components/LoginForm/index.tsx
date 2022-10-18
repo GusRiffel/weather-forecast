@@ -5,7 +5,7 @@ import { LoginFormValues } from "../../interfaces";
 import { CookieContext } from "../../context/AuthContext";
 import { useUser } from "../../hooks/useUser";
 
-export function LoginForm() {
+export const LoginForm = () => {
   const {
     register,
     handleSubmit,
@@ -28,4 +28,4 @@ export function LoginForm() {
       <button type="submit">Submit</button>
     </form>
   );
-}
+};

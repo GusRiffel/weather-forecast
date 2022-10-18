@@ -1,9 +1,9 @@
 import { WeatherContainer } from "../containers/WeatherContainer";
 
-export function Home() {
+export const Home = () => {
   return (
     <div>
       <WeatherContainer />
     </div>
   );
-}
+};

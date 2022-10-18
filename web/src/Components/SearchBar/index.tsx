@@ -1,23 +1,22 @@
 import { useForm } from "react-hook-form";
-
-
-
-type FormValues = {
-  city: string;
-};
+import { SearchWeather } from "../../interfaces";
 
 interface SearchBarProps {
-  onSubmit: (city: string) => void
+  onSubmit: (city: string) => void;
 }
 
-export function SearchBar({onSubmit}: SearchBarProps) {
-  const {register, handleSubmit, formState: {errors}, reset} = useForm<FormValues>();
-  
-  function onCustomSubmit(data:FormValues) {
+export const SearchBar = ({ onSubmit }: SearchBarProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<SearchWeather>();
+
+  const onCustomSubmit = (data: SearchWeather) => {
     onSubmit(data.city);
     reset();
-  }
-
+  };
 
   return (
     <div className="flex justify-center py-5">
@@ -31,8 +30,13 @@ export function SearchBar({onSubmit}: SearchBarProps) {
           size={50}
           required
         />
-        <button className="ml-1 border-solid border-2 border-green-500 rounded-md" type="submit">Search</button>
+        <button
+          className="ml-1 border-solid border-2 border-green-500 rounded-md"
+          type="submit"
+        >
+          Search
+        </button>
       </form>
     </div>
   );
-}
+};

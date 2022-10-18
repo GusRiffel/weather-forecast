@@ -8,20 +8,20 @@ interface WeatherFavCardProps extends CityWeather {
   onFavDelete: any;
 }
 
-export function WeatherFavCard({
+export const WeatherFavCard = ({
   weatherCondition,
   weatherData,
   windSpeed,
   city,
   onFavDelete,
-}: WeatherFavCardProps) {
+}: WeatherFavCardProps) => {
   const background = "bg-gradient-to-b from-[#99ccff] to-[#66b2ff] rounded-md";
   const grid = "grid grid-rows-2";
   const [viewWeather, setViewWeather] = useState<boolean>(true);
 
-  function handleFavClick() {
+  const handleFavClick = () => {
     setViewWeather(!viewWeather);
-  }
+  };
 
   return (
     <div
@@ -64,4 +64,4 @@ export function WeatherFavCard({
       )}
     </div>
   );
-}
+};

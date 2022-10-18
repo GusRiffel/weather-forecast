@@ -12,15 +12,15 @@ interface WeatherCardProps extends CityWeather {
   isFavorite: boolean;
 }
 
-export function WeatherCard({
+export const WeatherCard = ({
   city,
   weatherCondition,
   weatherData,
   windSpeed,
   onFavorite,
   isFavorite,
-}: WeatherCardProps) {
-  const cookieContext = useContext(CookieContext);
+}: WeatherCardProps) => {
+  const { currentUser } = useContext(CookieContext);
 
   return (
     <div className="flex justify-center py-5 text-white font-bold">
@@ -33,7 +33,7 @@ export function WeatherCard({
             <h1>{city}</h1>
           </div>
           <div className="justify-self-end cursor-pointer">
-            {cookieContext?.currentUser && (
+            {currentUser && (
               <BsStarFill
                 className={
                   isFavorite
@@ -88,4 +88,4 @@ export function WeatherCard({
       </div>
     </div>
   );
-}
+};

@@ -6,7 +6,7 @@ import { CookieContext } from "../../context/AuthContext";
 import { useWeatherAPI } from "../../hooks/useWeatherAPI";
 import { CityWeather } from "../../interfaces";
 
-export function WeatherContainer() {
+export const WeatherContainer = () => {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
   const [favoriteWeather, setFavoriteWeather] = useState<CityWeather[]>([]);
   const { currentUser } = useContext(CookieContext);
@@ -108,4 +108,4 @@ export function WeatherContainer() {
         ))}
     </>
   );
-}
+};

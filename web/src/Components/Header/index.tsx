@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CookieContext } from "../../context/AuthContext";
 
-export function Header() {
-  const cookieContext = useContext(CookieContext);
+export const Header = () => {
+  const { removeCookie, currentUser } = useContext(CookieContext);
 
-  function handleLogOut() {
-    cookieContext.removeCookie();
-  }
+  const handleLogOut = () => {
+    removeCookie();
+  };
 
   return (
     <div className="grid grid-cols-3 bg-slate-300 h-20 items-center rounded ">
@@ -17,9 +17,9 @@ export function Header() {
       </div>
       <div className="text-right text-xl pr-5 cursor-pointer">
         <div>
-          {cookieContext.currentUser ? (
+          {currentUser ? (
             <div>
-              <p>Welcome {cookieContext.currentUser}</p>
+              <p>Welcome {currentUser}</p>
               <p onClick={() => handleLogOut()}>Log out</p>
             </div>
           ) : (
@@ -29,4 +29,4 @@ export function Header() {
       </div>
     </div>
   );
-}
+};
