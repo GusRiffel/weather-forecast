@@ -12,6 +12,13 @@ export interface CityWeather {
   windSpeed: number;
 }
 
+export interface UserToken {
+  access_token: string;
+  refresh_token: string;
+  username: string;
+}
+
+
 export interface LoginFormValues {
   username: string;
   password: string;

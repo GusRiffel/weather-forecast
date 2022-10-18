@@ -1,10 +1,10 @@
-import { AxiosResponse } from "axios";
-import { createContext, useState, ReactNode } from "react";
+import { createContext, ReactNode, useState } from "react";
 import { Cookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { UserToken } from "../interfaces";
 
 interface CookieContextProps {
-  createCookie: (data: AxiosResponse<any, any>) => void;
+  createCookie: (data: UserToken) => void;
   getCookie: () => {
     access_token: string;
     refresh_token: string;
@@ -27,7 +27,7 @@ export const AuthContext = ({ children }: AuthProviderProps) => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState("");
 
-  const createCookie = (data: AxiosResponse<any, any>) => {
+  const createCookie = (data: UserToken) => {
     cookies.set("auth", data);
     setCurrentUser(getCookie().username);
     navigate("/");

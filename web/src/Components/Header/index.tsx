@@ -5,7 +5,7 @@ import { CookieContext } from "../../context/AuthContext";
 export const Header = () => {
   const { removeCookie, currentUser } = useContext(CookieContext);
 
-  const handleLogOut = () => {
+  const handleLogOut = ():void => {
     removeCookie();
   };
 
