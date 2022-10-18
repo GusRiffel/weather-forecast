@@ -1,11 +1,7 @@
-import { CityWeather, FavoriteCity } from "./../interfaces";
-import { useContext } from "react";
-import { CookieContext } from "../context/AuthContext";
 import { service } from "./../api/service";
+import { CityWeather, FavoriteCity } from "./../interfaces";
 
 export const useWeatherAPI = () => {
-  const { getCookie } = useContext(CookieContext);
-
   const getWeatherByCity = async ({
     city,
   }: {
@@ -23,11 +19,7 @@ export const useWeatherAPI = () => {
     username: string;
   }): Promise<string[]> => {
     return await service
-      .get(`/favorites/${username}`, {
-        headers: {
-          Authorization: `Bearer ${getCookie().refresh_token}`,
-        },
-      })
+      .get(`/favorites/${username}`)
       .then((res) => res.data)
       .catch((error) => error);
   };
@@ -40,17 +32,7 @@ export const useWeatherAPI = () => {
     currentUser: string;
   }): Promise<FavoriteCity> => {
     return await service
-      .post(
-        "/favorites/create",
-        { username: currentUser, city: city },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${getCookie().refresh_token}`,
-          },
-        }
-      )
+      .post("/favorites/create", { username: currentUser, city: city })
       .then((res) => res.data)
       .catch((error) => error);
   };
@@ -64,10 +46,6 @@ export const useWeatherAPI = () => {
   }): Promise<Number> => {
     return await service
       .delete(`/favorites/delete`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getCookie().refresh_token}`,
-        },
         data: { username: currentUser, city },
       })
       .then((res) => res.status)
