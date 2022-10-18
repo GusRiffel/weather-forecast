@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { LoginFormValues } from "../../interfaces";
+import { useNavigate } from "react-router-dom";
 
-import { CookieContext } from "../../context/AuthContext";
+import { UserContext } from "../../context/AuthContext";
 import { useUser } from "../../hooks/useUser";
-
+import { createCookie } from "../../utils/cookieHelper";
 
 export const LoginForm = () => {
   const {
@@ -13,12 +14,15 @@ export const LoginForm = () => {
     formState: { errors },
   } = useForm<LoginFormValues>();
   const { login } = useUser();
-  const { createCookie } = useContext(CookieContext);
+  const { createCurrentUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const handleLogin = async (data: LoginFormValues) => {
     const response = await login(data);
     if (response.access_token) {
       createCookie(response);
+      createCurrentUser(response.username);
+      navigate("/");
     }
   };
 

@@ -4,7 +4,7 @@ import { getIconByWeatherCondition } from "../../utils/iconHelpers";
 
 import * as dayjs from "dayjs";
 
-import { CookieContext } from "../../context/AuthContext";
+import { UserContext } from "../../context/AuthContext";
 import { CityWeather } from "../../interfaces";
 
 interface WeatherCardProps extends CityWeather {
@@ -20,7 +20,7 @@ export const WeatherCard = ({
   onFavorite,
   isFavorite,
 }: WeatherCardProps) => {
-  const { currentUser } = useContext(CookieContext);
+  const { currentUser } = useContext(UserContext);
 
   return (
     <div className="flex justify-center py-5 text-white font-bold">

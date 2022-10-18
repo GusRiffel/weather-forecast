@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { CookieContext } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
+import { UserContext } from "../../context/AuthContext";
+import { removeCookie } from "../../utils/cookieHelper";
 
 export const Header = () => {
-  const { removeCookie, currentUser } = useContext(CookieContext);
+  const { currentUser, deleteCurrentUser } = useContext(UserContext);
 
   const handleLogOut = () => {
     removeCookie();
+    deleteCurrentUser();
   };
 
   return (

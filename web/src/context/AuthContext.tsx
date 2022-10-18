@@ -1,57 +1,39 @@
 import { createContext, ReactNode, useState } from "react";
-import { Cookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
-import { UserToken } from "../interfaces";
 
-interface CookieContextProps {
-  createCookie: (data: UserToken) => void;
-  getCookie: () => {
-    access_token: string;
-    refresh_token: string;
-    username: string;
-  };
-  removeCookie: () => void;
+interface UserContextProps {
   currentUser: string;
+  createCurrentUser: (username: string) => void;
+  deleteCurrentUser: () => void;
 }
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const CookieContext = createContext<CookieContextProps>(
-  {} as CookieContextProps
+export const UserContext = createContext<UserContextProps>(
+  {} as UserContextProps
 );
 
 export const AuthContext = ({ children }: AuthProviderProps) => {
-  const cookies = new Cookies();
-  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState("");
 
-  const createCookie = (data: UserToken) => {
-    cookies.set("auth", data);
-    setCurrentUser(getCookie().username);
-    navigate("/");
+  const createCurrentUser = (username: string) => {
+    setCurrentUser(username);
   };
 
-  const getCookie = () => {
-    return cookies.get("auth");
-  };
-
-  const removeCookie = () => {
-    cookies.remove("auth");
+  const deleteCurrentUser = () => {
     setCurrentUser("");
   };
 
   return (
-    <CookieContext.Provider
+    <UserContext.Provider
       value={{
-        createCookie,
-        getCookie,
-        removeCookie,
         currentUser,
+        createCurrentUser,
+        deleteCurrentUser,
       }}
     >
       {children}
-    </CookieContext.Provider>
+    </UserContext.Provider>
   );
 };

@@ -1,14 +1,12 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import Cookies from "js-cookie";
+import { getCookie } from "../utils/cookieHelper";
 
 const onRequest = async (config: AxiosRequestConfig) => {
   if (config.url?.includes("favorites")) {
-    const cookie = Cookies.get("auth");
+    const cookie = getCookie();
     if (cookie) {
       config.headers = config.headers ?? {};
-      config.headers.Authorization = `Bearer ${
-        JSON.parse(decodeURIComponent(cookie)).refresh_token
-      }`;
+      config.headers.Authorization = `Bearer ${cookie.refresh_token}`;
     }
   }
   return config;

@@ -2,14 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { SearchBar } from "../../components/SearchBar";
 import { WeatherCard } from "../../components/WeatherCard";
 import { WeatherFavCard } from "../../components/WeatherFavCard";
-import { CookieContext } from "../../context/AuthContext";
+import { UserContext } from "../../context/AuthContext";
 import { useWeatherAPI } from "../../hooks/useWeatherAPI";
 import { CityWeather } from "../../interfaces";
 
 export const WeatherContainer = () => {
   const [weathers, setWeathers] = useState<CityWeather[]>([]);
   const [favoriteWeather, setFavoriteWeather] = useState<CityWeather[]>([]);
-  const { currentUser } = useContext(CookieContext);
+  const { currentUser } = useContext(UserContext);
   const {
     deleteFavorite,
     createFavorite,
