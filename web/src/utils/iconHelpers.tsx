@@ -16,6 +16,8 @@ export const getIconByWeatherCondition = (weatherCondition: string) => {
       return <BsCloudHazeFill size={60} />;
     case WeatherCondition.MIST:
       return <BsCloudHazeFill size={60} />;
+    case WeatherCondition.FOG:
+      return <BsCloudHazeFill size={60} />;
     case WeatherCondition.CLEAR:
       return <BsFillSunFill size={60} />;
     case WeatherCondition.DRIZZLE:

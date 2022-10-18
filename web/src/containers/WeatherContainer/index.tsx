@@ -33,8 +33,8 @@ export const WeatherContainer = () => {
   }, [weathers]);
 
   const handleDeleteFavoriteCity = async (city: string) => {
-    const data = await deleteFavorite(city);
-    if (data === 204) {
+    const response = await deleteFavorite({ city, currentUser });
+    if (response === 204) {
       setFavoriteWeather([
         ...favoriteWeather.filter(
           (w) => w.city.toUpperCase() !== city.toUpperCase()
@@ -44,8 +44,8 @@ export const WeatherContainer = () => {
   };
 
   const handleAddFavoriteCity = async (city: string) => {
-    const data = await createFavorite(city);
-    if (data.id) {
+    const response = await createFavorite({ city, currentUser });
+    if (response.id) {
       const newFavWeather = weathers.find(
         (w) => w.city.toUpperCase() === city.toUpperCase()
       );
@@ -56,11 +56,11 @@ export const WeatherContainer = () => {
   };
 
   const handleFavoriteWeather = async (username: string) => {
-    const favCities: string[] = await getFavoriteCities(username);
-    const data: CityWeather[] = await Promise.all(
-      favCities.map((city) => getWeatherByCity(city))
+    const favCities = await getFavoriteCities({ username });
+    const response = await Promise.all(
+      favCities.map((city) => getWeatherByCity({ city }))
     );
-    setFavoriteWeather([...data]);
+    setFavoriteWeather([...response]);
   };
 
   const handleWeatherSearch = async (city: string) => {
@@ -68,9 +68,9 @@ export const WeatherContainer = () => {
       console.log("City already searched");
       return;
     }
-    const data: CityWeather = await getWeatherByCity(city);
-    if (data.city) {
-      setWeathers([data, ...weathers]);
+    const response = await getWeatherByCity({ city });
+    if (response.city) {
+      setWeathers([response, ...weathers]);
     }
   };
 

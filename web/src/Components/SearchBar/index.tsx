@@ -1,5 +1,8 @@
 import { useForm } from "react-hook-form";
-import { SearchWeather } from "../../interfaces";
+
+interface searchFormValue {
+  city: string;
+}
 
 interface SearchBarProps {
   onSubmit: (city: string) => void;
@@ -11,9 +14,9 @@ export const SearchBar = ({ onSubmit }: SearchBarProps) => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<SearchWeather>();
+  } = useForm<searchFormValue>();
 
-  const onCustomSubmit = (data: SearchWeather) => {
+  const onCustomSubmit = (data: searchFormValue) => {
     onSubmit(data.city);
     reset();
   };

@@ -18,14 +18,15 @@ export interface UserToken {
   username: string;
 }
 
-
 export interface LoginFormValues {
   username: string;
   password: string;
 }
 
-export interface SearchWeather {
+export interface FavoriteCity {
+  id: string;
   city: string;
+  username: string;
 }
 
 export enum WeatherCondition {
@@ -35,6 +36,7 @@ export enum WeatherCondition {
   SNOW = "Snow",
   HAZE = "Haze",
   MIST = "Mist",
+  FOG = "Fog",
   CLEAR = "Clear",
   CLOUDS = "Clouds",
 }
