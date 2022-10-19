@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { getCookie } from "../utils/cookieHelper";
+import { toast } from "react-toastify";
 
-const onRequest = async (config: AxiosRequestConfig) => {
+const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   if (config.url?.includes("favorites")) {
     const cookie = getCookie();
     if (cookie) {
@@ -12,18 +13,25 @@ const onRequest = async (config: AxiosRequestConfig) => {
   return config;
 };
 
+const onRequestError = (error: AxiosError): Promise<AxiosError> => {
+  return Promise.reject(error);
+};
+
 const onResponse = (response: AxiosResponse): AxiosResponse => {
   return response;
 };
+
 const onResponseError = async (
   error: AxiosError
 ): Promise<AxiosError | any> => {
-  console.log(error);
+  toast.error(error.message, {
+    position: toast.POSITION.TOP_CENTER,
+  });
   return Promise.reject(error);
 };
+
 const axiosInstance = axios.create({ baseURL: "http://localhost:8080" });
-axiosInstance.interceptors.request.use(onRequest, (error) =>
-  Promise.reject(error)
-);
+axiosInstance.interceptors.request.use(onRequest, onRequestError);
 axiosInstance.interceptors.response.use(onResponse, onResponseError);
+
 export const service = axiosInstance;

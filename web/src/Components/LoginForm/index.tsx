@@ -38,7 +38,7 @@ export const LoginForm = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center border border-solid border-black w-[30%] rounded-md mx-auto">
+      <section className="flex flex-col items-center border border-solid border-black w-[30%] rounded-md mx-auto">
         <div className="text-3xl py-3">
           <h1>Login</h1>
         </div>
@@ -51,9 +51,9 @@ export const LoginForm = () => {
             {...register("username")}
             placeholder="Type your username"
           />
-          <p className="text-red-500 font-semibold">
+          <span className="text-red-500 font-semibold">
             {errors.username?.message}
-          </p>
+          </span>
           <input
             className="border rounded-md"
             {...register("password")}
@@ -70,7 +70,7 @@ export const LoginForm = () => {
         <div className="py-3">
           <p>Not registered yet? Sign up now!</p>
         </div>
-      </div>
+      </section>
     </>
   );
 };
