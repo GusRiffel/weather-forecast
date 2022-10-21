@@ -23,6 +23,12 @@ export interface LoginFormValues {
   password: string;
 }
 
+export interface RegisterFormValues {
+  username: string;
+  email: string;
+  password: string;
+}
+
 export interface FavoriteCity {
   id: string;
   city: string;
