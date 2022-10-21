@@ -1,4 +1,5 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { getCookie } from "../utils/cookieHelper";
 
 interface UserContextProps {
   currentUser: string;
@@ -16,6 +17,13 @@ export const UserContext = createContext<UserContextProps>(
 
 export const AuthContext = ({ children }: AuthProviderProps) => {
   const [currentUser, setCurrentUser] = useState("");
+
+  useEffect(() => {
+    const cookieUser = getCookie();
+    if (cookieUser) {
+      setCurrentUser(cookieUser.username);
+    }
+  }, []);
 
   const createCurrentUser = (username: string) => {
     setCurrentUser(username);

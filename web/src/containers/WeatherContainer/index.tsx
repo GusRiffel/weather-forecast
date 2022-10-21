@@ -74,28 +74,44 @@ export const WeatherContainer = () => {
     }
   };
 
-  function hasAlreadySearched(city: string) {
+  const hasAlreadySearched = (city: string) => {
     return weathers.some((w) => w.city.toUpperCase() === city.toUpperCase());
-  }
+  };
 
-  function isPartOfFavCities(city: string) {
+  const isPartOfFavCities = (city: string) => {
     return favoriteWeather.some(
       (w) => w.city.toUpperCase() === city.toUpperCase()
     );
-  }
+  };
+
+  const manageFavoriteView = (divId: string) => {
+    console.log(document.getElementById(divId));
+    const div = document.getElementById(divId);
+    if (div) {
+      div.remove();
+    }
+  };
 
   return (
     <>
       <SearchBar onSubmit={handleWeatherSearch} />
       <div className="flex justify-center">
-        {favoriteWeather &&
-          favoriteWeather.map((favoriteWeather, index) => (
-            <WeatherFavCard
-              {...favoriteWeather}
-              key={`weather-fav-card-${index}`}
-              onFavDelete={() => handleDeleteFavoriteCity(favoriteWeather.city)}
-            />
-          ))}
+        <ul className="inline-flex list-none">
+          {favoriteWeather &&
+            favoriteWeather.map((favoriteWeather, index) => (
+              <li>
+                <WeatherFavCard
+                  {...favoriteWeather}
+                  key={`weather-fav-card-${index}`}
+                  divId={`weather-fav-card-${index}`}
+                  favoriteView={manageFavoriteView}
+                  onFavDelete={() =>
+                    handleDeleteFavoriteCity(favoriteWeather.city)
+                  }
+                />
+              </li>
+            ))}
+        </ul>
       </div>
       {weathers &&
         weathers.map((weather, index) => (

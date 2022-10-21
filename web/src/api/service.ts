@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { getCookie } from "../utils/cookieHelper";
 import { toast } from "react-toastify";
-import { string } from "yup";
+import { getCookie } from "../utils/cookieHelper";
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   if (config.url?.includes("favorites")) {

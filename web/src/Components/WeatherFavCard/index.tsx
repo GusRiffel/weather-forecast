@@ -6,6 +6,8 @@ import { getIconByWeatherCondition } from "../../utils/iconHelpers";
 interface WeatherFavCardProps extends CityWeather {
   city: string;
   onFavDelete: any;
+  divId: string;
+  favoriteView: (divId: string) => void;
 }
 
 export const WeatherFavCard = ({
@@ -14,41 +16,37 @@ export const WeatherFavCard = ({
   windSpeed,
   city,
   onFavDelete,
+  divId,
+  favoriteView,
 }: WeatherFavCardProps) => {
   const background = "bg-gradient-to-b from-[#99ccff] to-[#66b2ff] rounded-md";
-  const grid = "grid grid-rows-2";
-  const [viewWeather, setViewWeather] = useState<boolean>(true);
+  const [viewWeather, setViewWeather] = useState<boolean>(false);
 
   const handleFavClick = () => {
     setViewWeather(!viewWeather);
   };
 
   return (
-    <div
-      className={`mx-3 items-center cursor-pointer w-[10rem] text-white text-center ${background}`}
-    >
-      <div>
-        <div className="flex justify-end">
-          <IoClose onClick={() => onFavDelete(city)} />
-        </div>
-        <div className="text-3xl" onClick={() => handleFavClick()}>
+    <>
+      <div
+        className={` flex flex-col mx-3 cursor-pointer w-[10rem] text-white text-center ${background}`}
+      >
+        <IoClose className="absolute place-self-end" onClick={() => onFavDelete(city)} />
+        <div
+          className="flex text-3xl h-20 items-center self-center"
+          onClick={() => handleFavClick()}
+        >
           <h1>{city}</h1>
         </div>
-      </div>
-      {viewWeather && (
-        <div className={`${viewWeather ? grid : ""}`}>
+        {viewWeather && (
           <div>
-            <div className="text-2xl">
+            <div>
               <h4>{Math.round(Number(weatherData.temp))}°C</h4>
-            </div>
-            <div className="flex justify-center">
-              <div>{getIconByWeatherCondition(weatherCondition)}</div>
-            </div>
-            <div className="">
+              <div className="flex justify-center">
+                {getIconByWeatherCondition(weatherCondition)}
+              </div>
               <h1>{weatherCondition}</h1>
             </div>
-          </div>
-          <div>
             <div className="grid grid-cols-2">
               <div className="">
                 <h1>Humidity</h1>
@@ -60,8 +58,8 @@ export const WeatherFavCard = ({
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
