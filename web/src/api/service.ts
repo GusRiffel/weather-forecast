@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { getCookie } from "../utils/cookieHelper";
 import { toast } from "react-toastify";
+import { string } from "yup";
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   if (config.url?.includes("favorites")) {
@@ -24,7 +25,7 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 const onResponseError = async (
   error: AxiosError
 ): Promise<AxiosError | any> => {
-  toast.error(error.message, {
+  toast.error((error.response as any)?.data.message, {
     position: toast.POSITION.TOP_CENTER,
   });
   return Promise.reject(error);

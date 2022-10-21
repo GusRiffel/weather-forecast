@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { LoginFormValues } from "../../interfaces";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { UserContext } from "../../context/AuthContext";
 import { useUser } from "../../hooks/useUser";
@@ -32,6 +33,7 @@ export const LoginForm = () => {
     if (response.access_token) {
       createCookie(response);
       createCurrentUser(response.username);
+      toast.success(`Welcome ${response.username}`);
       navigate("/");
     }
   };

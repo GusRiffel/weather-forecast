@@ -2,11 +2,13 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../context/AuthContext";
 import { removeCookie } from "../../utils/cookieHelper";
+import { toast } from "react-toastify";
 
 export const Header = () => {
   const { currentUser, deleteCurrentUser } = useContext(UserContext);
 
   const handleLogOut = () => {
+    toast.error(`You have logged out`);
     removeCookie();
     deleteCurrentUser();
   };
