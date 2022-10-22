@@ -1,7 +1,6 @@
 package com.example.weatherforecast.service;
 
 import com.example.weatherforecast.domain.WeatherFavorites;
-import com.example.weatherforecast.dto.WeatherFavoriteDeleteDto;
 import com.example.weatherforecast.repository.WeatherFavoritesRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +21,9 @@ public class WeatherFavoritesService {
         return weatherFavoritesRepository.findAllCitiesByUsername(username);
     }
 
-    public void deleteCityByUsername(WeatherFavoriteDeleteDto deleteDto) {
-        weatherFavoritesRepository.delete(weatherFavoritesRepository.findByUsernameAndCity(deleteDto.getUsername(),
-                deleteDto.getCity()));
+    public void deleteCityByUsername(WeatherFavorites weatherFavorites) {
+        weatherFavoritesRepository.delete(weatherFavoritesRepository.findByUsernameAndCity(weatherFavorites.getUsername(),
+                weatherFavorites.getCity()));
     }
 
     @Transactional

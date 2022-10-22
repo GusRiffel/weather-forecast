@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -22,12 +23,15 @@ public class User implements UserDetails {
     private UUID id;
 
     @Column(nullable = false, unique = true)
+    @NotEmpty(message = "Username cannot be empty")
     private String username;
 
     @Column(nullable = false)
+    @NotEmpty(message = "Email cannot be empty")
     private String email;
 
     @Column(nullable = false)
+    @NotEmpty(message = "Password cannot be empty")
     private String password;
 
     @Override
