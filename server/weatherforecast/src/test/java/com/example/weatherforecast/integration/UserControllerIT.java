@@ -12,15 +12,19 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserControllerIT {
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -44,41 +48,49 @@ public class UserControllerIT {
     @Test
     @DisplayName("findById returns userDto when successful")
     void findById_ReturnsUserDto_WhenSuccessful() {
-        userRepository.save(UserCreator)
+        User savedUser = userRepository.save(UserCreator.createUserToBeSaved());
+        UUID expectedId = savedUser.getId();
+
+        UserDto userDto = testRestTemplate.getForObject("/user/{id}", UserDto.class, expectedId);
 
         Assertions.assertThat(userDto).isNotNull();
-        Assertions.assertThat(userDto.getId()).isEqualTo(expectedId);
+        Assertions.assertThat(userDto.getId()).isNotNull().isEqualTo(expectedId);
     }
 
     @Test
     @DisplayName("save return userDto when successful")
     void save_ReturnsUserDto_WhenSuccessful() {
-        UserDto userDto = this.userController.save(UserCreator.createValidUserDto()).getBody();
+        User userToBeSaved = UserCreator.createUserToBeSaved();
+        ResponseEntity<UserDto> userDtoResponseEntity = testRestTemplate.postForEntity("/user/createuser",
+                userToBeSaved, UserDto.class);
 
-        Assertions.assertThat(userDto).isNotNull().isEqualTo(UserCreator.createValidUserDto());
+        Assertions.assertThat(userDtoResponseEntity).isNotNull();
+        Assertions.assertThat(userDtoResponseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        Assertions.assertThat(Objects.requireNonNull(userDtoResponseEntity.getBody()).getId()).isNotNull();
     }
 
     @Test
     @DisplayName("update updates userDto when successful")
     void update_UpdatesUserDto_WhenSuccessful() {
-        Assertions.assertThatCode(() -> this.userController.update(uuid, UserCreator.createValidUserDto()))
-                .doesNotThrowAnyException();
+        User savedUser = userRepository.save(UserCreator.createUserToBeSaved());
+        savedUser.setUsername("Carls");
 
-        UserDto userUpdatedDto = this.userController.update(uuid, UserCreator.createValidUserDto()).getBody();
+        ResponseEntity<UserDto> userDtoResponseEntity = testRestTemplate.exchange("/user/update/{id}", HttpMethod.PUT,
+                new HttpEntity<>(savedUser), UserDto.class, savedUser.getId());
 
-        Assertions.assertThat(userUpdatedDto).isNotNull().isEqualTo(UserCreator.createValidUserDto());
+        Assertions.assertThat(userDtoResponseEntity).isNotNull();
+        Assertions.assertThat(Objects.requireNonNull(userDtoResponseEntity.getBody()).getUsername()).isEqualTo(savedUser.getUsername());
     }
 
     @Test
-    @DisplayName("delete removes user when succesful")
+    @DisplayName("delete removes user when successful")
     void delete_RemovesUser_WhenSuccessful() {
-        Assertions.assertThatCode(() -> this.userController.delete(uuid))
-                .doesNotThrowAnyException();
+        User savedUser = userRepository.save(UserCreator.createUserToBeSaved());
 
-        ResponseEntity<Void> entity = this.userController.delete(uuid);
+        ResponseEntity<Void> userResponseEntity = testRestTemplate.exchange("/user/delete/{id}", HttpMethod.DELETE, null,
+                Void.class, savedUser.getId());
 
-        Assertions.assertThat(entity).isNotNull();
-
-        Assertions.assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        Assertions.assertThat(userResponseEntity).isNotNull();
+        Assertions.assertThat(userResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 }
