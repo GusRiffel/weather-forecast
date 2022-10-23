@@ -1,6 +1,7 @@
 package com.example.weatherforecast.repository;
 
 import com.example.weatherforecast.domain.User;
+import com.example.weatherforecast.util.UserCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Save persists user when successful")
     void save_PersistUser_WhenSuccessful() {
-        User userToBeSaved = createUser();
+        User userToBeSaved = UserCreator.createUserToBeSaved();
         User savedUser = this.userRepository.save(userToBeSaved);
 
         Assertions.assertThat(savedUser).isNotNull();
@@ -31,7 +32,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Save updates user when successful")
     void save_UpdatesUser_WhenSuccessful() {
-        User userToBeSaved = createUser();
+        User userToBeSaved = UserCreator.createUserToBeSaved();
         User savedUser = this.userRepository.save(userToBeSaved);
 
         savedUser.setUsername("Carls");
@@ -49,7 +50,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Delete removes user when successful")
     void delete_RemovesUser_WhenSuccessful() {
-        User userToBeSaved = createUser();
+        User userToBeSaved = UserCreator.createUserToBeSaved();
         User savedUser = this.userRepository.save(userToBeSaved);
 
         this.userRepository.delete(savedUser);
@@ -61,7 +62,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Find by Username returns user when successful")
     void findByUsername_ReturnsUser_WhenSuccessful() {
-        User userToBeSaved = createUser();
+        User userToBeSaved = UserCreator.createUserToBeSaved();
         User savedUser = this.userRepository.save(userToBeSaved);
 
         String username = savedUser.getUsername();
@@ -78,11 +79,4 @@ class UserRepositoryTest {
         Assertions.assertThat(user).isEmpty();
     }
 
-    private User createUser() {
-        return User.builder()
-                .username("Gus")
-                .email("gus@gus.com")
-                .password("123456")
-                .build();
-    }
 }
