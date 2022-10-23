@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -16,5 +17,5 @@ public interface WeatherFavoritesRepository extends JpaRepository<WeatherFavorit
     @Query("SELECT w.city FROM WeatherFavorites w WHERE w.username = :username ")
     List<String> findAllCitiesByUsername(@Param("username") String username);
 
-    WeatherFavorites findByUsernameAndCity(String username, String city);
+    Optional<WeatherFavorites> findByUsernameAndCity(String username, String city);
 }

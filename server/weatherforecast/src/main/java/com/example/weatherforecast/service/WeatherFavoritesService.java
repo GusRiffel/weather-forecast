@@ -1,6 +1,7 @@
 package com.example.weatherforecast.service;
 
 import com.example.weatherforecast.domain.WeatherFavorites;
+import com.example.weatherforecast.exception.BadRequestException;
 import com.example.weatherforecast.repository.WeatherFavoritesRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class WeatherFavoritesService {
 
     public void deleteCityByUsername(WeatherFavorites weatherFavorites) {
         weatherFavoritesRepository.delete(weatherFavoritesRepository.findByUsernameAndCity(weatherFavorites.getUsername(),
-                weatherFavorites.getCity()));
+                weatherFavorites.getCity()).orElseThrow(() -> new BadRequestException("Weather not found")));
     }
 
     @Transactional
