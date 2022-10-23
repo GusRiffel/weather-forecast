@@ -6,10 +6,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import javax.validation.ConstraintViolationException;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Optional;
+import java.util.Set;
 
 @DataJpaTest
 @DisplayName("UserRepository tests")
@@ -80,6 +83,16 @@ class UserRepositoryTest {
         Assertions.assertThat(user).isEmpty();
     }
 
+    @Test
+    @DisplayName("Save creates violations when any user attributes are empty")
+    void save_CreatesViolations_WhenUserAttributesAreEmpty() {
+        User userToBeSaved = new User();
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<User>> violations = validator.validate(userToBeSaved);
+
+        Assertions.assertThat(violations).isNotEmpty();
+    }
 
     private User createUser() {
         return User.builder()
