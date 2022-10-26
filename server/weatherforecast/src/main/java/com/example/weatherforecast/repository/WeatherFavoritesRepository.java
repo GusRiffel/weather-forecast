@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface WeatherFavoritesRepository extends JpaRepository<WeatherFavorites, UUID> {
 
     @Query("SELECT w.city FROM WeatherFavorites w WHERE w.username = :username ")
-    List<String> findAllCitiesByUsername(@Param("username") String username);
+    Optional<List<String>> findAllCitiesByUsername(@Param("username") String username);
 
     Optional<WeatherFavorites> findByUsernameAndCity(String username, String city);
 }

@@ -19,7 +19,7 @@ public class WeatherFavoritesService {
     }
 
     public List<String> listAllCitiesByUsername(String username) {
-        return weatherFavoritesRepository.findAllCitiesByUsername(username);
+        return weatherFavoritesRepository.findAllCitiesByUsername(username).orElseThrow(() -> new BadRequestException("User not found"));
     }
 
     public void deleteCityByUsername(WeatherFavorites weatherFavorites) {
