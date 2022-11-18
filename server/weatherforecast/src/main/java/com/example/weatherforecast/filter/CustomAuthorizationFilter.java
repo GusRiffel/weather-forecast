@@ -27,7 +27,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             String authHeader = request.getHeader(AUTHORIZATION);
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 try {
-                    DecodedJWT decodedJWT = TokenManager.verifyToken(authHeader);
+                    DecodedJWT decodedJWT = TokenManager.verifyAccessToken(authHeader);
                     TokenManager.setUserToSpringSecurity(decodedJWT);
                     filterChain.doFilter(request, response);
                 } catch (Exception e) {

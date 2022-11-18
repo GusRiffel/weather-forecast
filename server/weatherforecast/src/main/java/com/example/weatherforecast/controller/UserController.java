@@ -61,12 +61,10 @@ public class UserController {
         String authHeader = request.getHeader(AUTHORIZATION);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             try {
-                DecodedJWT decodedJWT = TokenManager.verifyToken(authHeader);
-                User user = userService.getByUsername(decodedJWT.getSubject());
+                DecodedJWT decodedJWT = TokenManager.verifyRefreshToken(authHeader);
 
                 Map<String, String> tokens = new HashMap<>();
-                tokens.put("access_token", TokenManager.refreshAccessToken(user, request));
-                tokens.put("refresh_token", authHeader.substring("Bearer ".length()));
+                tokens.put("access_token", TokenManager.refreshAccessToken(decodedJWT.getSubject(), request));
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception e) {

@@ -4,8 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -15,53 +17,63 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Component
+@Log4j2
 public class TokenManager {
 
-    private static String jwtSecret;
+    private static String accessTokenSecret;
+    private static String refreshTokenSecret;
 
-    @Value("${secret}")
-    public void setTest(String secret) {
-        jwtSecret = secret;
+    @Value("${access_secret}")
+    public void setAccessTokenSecret(String secret) {
+        accessTokenSecret = secret;
     }
 
-    private static Algorithm createAlgorithm() {
-        return Algorithm.HMAC256(jwtSecret.getBytes());
+    @Value("${refresh_secret}")
+    public void setRefreshTokenSecret(String secret) {
+        refreshTokenSecret = secret;
     }
 
-    private static String createAccessToken(HttpServletRequest request, User user) {
+    private static Algorithm createAlgorithm(String secret) {
+        return Algorithm.HMAC256(secret.getBytes());
+    }
+
+    private static String createAccessToken(HttpServletRequest request, String user) {
         return JWT.create()
-                .withSubject(user.getUsername())
+                .withSubject(user)
+                .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
-                .sign(createAlgorithm());
+                .sign(createAlgorithm(accessTokenSecret));
     }
 
-    private static String createRefreshToken(HttpServletRequest request, User user) {
+    private static String createRefreshToken(HttpServletRequest request, String user) {
         return JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .withSubject(user)
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1440 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
-                .sign(createAlgorithm());
+                .sign(createAlgorithm(refreshTokenSecret));
     }
 
     public static Map<String, String> createNewToken(HttpServletRequest request, User user) {
         Map<String, String> tokens = new HashMap<>();
         tokens.put("username", user.getUsername());
-        tokens.put("access_token", TokenManager.createAccessToken(request, user));
-        tokens.put("refresh_token", TokenManager.createRefreshToken(request, user));
+        tokens.put("access_token", TokenManager.createAccessToken(request, user.getUsername()));
+        tokens.put("refresh_token", TokenManager.createRefreshToken(request, user.getUsername()));
         return tokens;
     }
 
-    public static String refreshAccessToken(com.example.weatherforecast.domain.User user, HttpServletRequest request) {
-        return JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 30 * 1000))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(createAlgorithm());
+    public static String refreshAccessToken(String user, HttpServletRequest request) {
+        return createAccessToken(request, user);
     }
 
-    public static DecodedJWT verifyToken(String authHeader) {
-        JWTVerifier verifier = JWT.require(createAlgorithm()).build();
+    public static DecodedJWT verifyAccessToken(String authHeader) {
+        JWTVerifier verifier = JWT.require(createAlgorithm(accessTokenSecret)).build();
+        return verifier.verify(authHeader.substring("Bearer ".length()));
+    }
+
+    public static DecodedJWT verifyRefreshToken(String authHeader) {
+        JWTVerifier verifier = JWT.require(createAlgorithm(refreshTokenSecret)).build();
         return verifier.verify(authHeader.substring("Bearer ".length()));
     }
 
@@ -71,7 +83,5 @@ public class TokenManager {
                 new UsernamePasswordAuthenticationToken(decodedJWT.getSubject(), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
-
-
 }
 
