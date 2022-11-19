@@ -41,7 +41,7 @@ public class TokenManager {
         return JWT.create()
                 .withSubject(user)
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 5 * 60 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(createAlgorithm(accessTokenSecret));
     }

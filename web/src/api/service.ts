@@ -1,6 +1,9 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
-import { getCookie } from "../utils/cookieHelper";
+import { useUser } from "../hooks/useUser";
+import { getCookie, createCookie } from "../utils/cookieHelper";
+
+const axiosInstance = axios.create({ baseURL: "http://localhost:8080" });
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   if (config.url?.includes("favorites")) {
@@ -24,7 +27,17 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 const onResponseError = async (
   error: AxiosError
 ): Promise<AxiosError | any> => {
-  console.log(error);
+  const cookie = getCookie();
+  const { refreshAccessToken } = useUser();
+
+  if ((error.response as any)?.data.error.includes("expired")) {
+    const {access_token: newAccessToken} = await refreshAccessToken(
+      cookie!.username
+    );
+    createCookie({username: cookie!.username, access_token: newAccessToken});
+
+    return axiosInstance.request(error.config);
+  }
   toast.error(
     (error.response as any)?.data.message ||
       (error.response as any)?.data.details,
@@ -35,7 +48,7 @@ const onResponseError = async (
   return Promise.reject(error);
 };
 
-const axiosInstance = axios.create({ baseURL: "http://localhost:8080" });
+
 axiosInstance.interceptors.request.use(onRequest, onRequestError);
 axiosInstance.interceptors.response.use(onResponse, onResponseError);
 

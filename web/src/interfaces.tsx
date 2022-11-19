@@ -14,7 +14,7 @@ export interface CityWeather {
 
 export interface UserToken {
   access_token: string;
-  refresh_token: string;
+  refresh_token?: string;
   username: string;
 }
 

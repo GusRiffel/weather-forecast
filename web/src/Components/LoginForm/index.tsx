@@ -24,14 +24,15 @@ export const LoginForm = () => {
   } = useForm<LoginFormValues>({
     resolver: yupResolver(schema),
   });
-  const { login } = useUser();
+  const { login, saveRefreshToken } = useUser();
   const { createCurrentUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLogin = async (data: LoginFormValues) => {
     const response = await login(data);
     if (response.access_token) {
-      createCookie(response);
+      await saveRefreshToken(response);
+      createCookie({username: response.username, access_token: response.access_token});
       createCurrentUser(response.username);
       toast.success(`Welcome ${response.username}`);
       navigate("/");

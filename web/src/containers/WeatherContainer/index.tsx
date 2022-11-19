@@ -45,7 +45,7 @@ export const WeatherContainer = () => {
 
   const handleAddFavoriteCity = async (city: string) => {
     const response = await createFavorite({ city, currentUser });
-    if (response.id) {
+    if (response.username) {
       const newFavWeather = weathers.find(
         (w) => w.city.toUpperCase() === city.toUpperCase()
       );
@@ -57,7 +57,6 @@ export const WeatherContainer = () => {
 
   const handleFavoriteWeather = async (username: string) => {
     const favCities = await getFavoriteCities({ username });
-    console.log(favCities);
     const response = await Promise.all(
       favCities.map((city) => getWeatherByCity({ city }))
     );
@@ -66,7 +65,6 @@ export const WeatherContainer = () => {
 
   const handleWeatherSearch = async (city: string) => {
     if (hasAlreadySearched(city) || isPartOfFavCities(city)) {
-      console.log("City already searched");
       return;
     }
     const response = await getWeatherByCity({ city });
@@ -86,7 +84,6 @@ export const WeatherContainer = () => {
   };
 
   const manageFavoriteView = (divId: string) => {
-    console.log(document.getElementById(divId));
     const div = document.getElementById(divId);
     if (div) {
       div.remove();
@@ -100,7 +97,7 @@ export const WeatherContainer = () => {
         <ul className="inline-flex list-none">
           {favoriteWeather &&
             favoriteWeather.map((favoriteWeather, index) => (
-              <li>
+              <li key={`weather-fav-card-${index}`}>
                 <WeatherFavCard
                   {...favoriteWeather}
                   key={`weather-fav-card-${index}`}
