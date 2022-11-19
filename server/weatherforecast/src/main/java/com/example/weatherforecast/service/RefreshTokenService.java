@@ -19,7 +19,11 @@ public class RefreshTokenService {
 
     @Transactional
     public RefreshToken save(@RequestBody RefreshToken refreshToken) {
-        return refreshTokenRepository.save(refreshToken);
+        if (isTokenAlreadyExistent(refreshToken.getUsername())) {
+            throw new BadRequestException("Token already exists for the given user");
+        } else {
+            return refreshTokenRepository.save(refreshToken);
+        }
     }
 
     public void delete(UUID id) {
@@ -28,6 +32,15 @@ public class RefreshTokenService {
 
     public RefreshToken getByUsername(String username) {
         return refreshTokenRepository.findByUsername(username).orElseThrow(() -> new BadRequestException("User not " +
-                "found"));
+                        "found"));
+    }
+
+    public boolean isTokenAlreadyExistent(String username) {
+        try {
+            getByUsername(username);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

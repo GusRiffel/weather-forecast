@@ -24,9 +24,14 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 const onResponseError = async (
   error: AxiosError
 ): Promise<AxiosError | any> => {
-  toast.error((error.response as any)?.data.message, {
-    position: toast.POSITION.TOP_CENTER,
-  });
+  console.log(error);
+  toast.error(
+    (error.response as any)?.data.message ||
+      (error.response as any)?.data.details,
+    {
+      position: toast.POSITION.TOP_CENTER,
+    }
+  );
   return Promise.reject(error);
 };
 

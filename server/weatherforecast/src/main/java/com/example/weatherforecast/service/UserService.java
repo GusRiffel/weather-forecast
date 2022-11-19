@@ -29,8 +29,12 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User save(@RequestBody User user) {
+        if (isUsernameAlreadyExistent(user.getUsername())) {
+            throw new BadRequestException("Username already exists");
+        } else {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+        }
     }
 
     public User update(UUID id, User userRequest) {
@@ -58,5 +62,14 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username:" + username));
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+    }
+
+    public boolean isUsernameAlreadyExistent(String username) {
+        try {
+            getByUsername(username);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
