@@ -57,6 +57,7 @@ export const WeatherContainer = () => {
 
   const handleFavoriteWeather = async (username: string) => {
     const favCities = await getFavoriteCities({ username });
+    console.log(favCities);
     const response = await Promise.all(
       favCities.map((city) => getWeatherByCity({ city }))
     );

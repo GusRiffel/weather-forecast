@@ -7,7 +7,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
     const cookie = getCookie();
     if (cookie) {
       config.headers = config.headers ?? {};
-      config.headers.Authorization = `Bearer ${cookie.refresh_token}`;
+      config.headers.Authorization = `Bearer ${cookie.access_token}`;
     }
   }
   return config;
