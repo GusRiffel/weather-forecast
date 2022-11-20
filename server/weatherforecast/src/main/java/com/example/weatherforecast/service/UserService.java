@@ -18,7 +18,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Service @RequiredArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -32,8 +33,8 @@ public class UserService implements UserDetailsService {
         if (isUsernameAlreadyExistent(user.getUsername())) {
             throw new BadRequestException("Username already exists");
         } else {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            return userRepository.save(user);
         }
     }
 
@@ -61,7 +62,8 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username:" + username));
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                authorities);
     }
 
     public boolean isUsernameAlreadyExistent(String username) {

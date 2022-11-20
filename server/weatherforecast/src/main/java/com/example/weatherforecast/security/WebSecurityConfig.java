@@ -3,7 +3,6 @@ package com.example.weatherforecast.security;
 import com.example.weatherforecast.filter.CustomAuthFilter;
 import com.example.weatherforecast.filter.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

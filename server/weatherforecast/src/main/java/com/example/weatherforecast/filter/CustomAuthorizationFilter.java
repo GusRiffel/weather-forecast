@@ -1,5 +1,6 @@
 package com.example.weatherforecast.filter;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.weatherforecast.utils.TokenManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +31,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     DecodedJWT decodedJWT = TokenManager.verifyAccessToken(authHeader);
                     TokenManager.setUserToSpringSecurity(decodedJWT);
                     filterChain.doFilter(request, response);
-                } catch (Exception e) {
+                } catch (JWTVerificationException e) {
                     response.setHeader("error", e.getMessage());
                     response.setStatus(FORBIDDEN.value());
                     Map<String, String> error = new HashMap<>();
