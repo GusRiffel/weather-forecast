@@ -3,15 +3,14 @@ package com.example.weatherforecast.controller;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.weatherforecast.domain.User;
 import com.example.weatherforecast.dto.UserDto;
+import com.example.weatherforecast.filter.CustomAuthFilter;
 import com.example.weatherforecast.service.UserService;
 import com.example.weatherforecast.utils.TokenManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,10 +32,12 @@ public class UserController {
 
     private final ModelMapper modelMapper;
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
 
-    public UserController(ModelMapper modelMapper, UserService userService) {
+    public UserController(ModelMapper modelMapper, UserService userService, AuthenticationManager authenticationManager ) {
         this.modelMapper = modelMapper;
         this.userService = userService;
+        this.authenticationManager = authenticationManager;
     }
 
     @GetMapping("/all")
@@ -79,8 +80,6 @@ public class UserController {
             throw new RuntimeException("Refresh token is missing");
         }
     }
-
-
 
     @PostMapping("/createuser")
     public ResponseEntity<UserDto> save(@RequestBody @Valid UserDto userDto) {

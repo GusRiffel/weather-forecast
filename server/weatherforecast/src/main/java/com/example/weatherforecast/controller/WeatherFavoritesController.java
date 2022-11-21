@@ -4,6 +4,7 @@ import com.example.weatherforecast.domain.WeatherFavorites;
 import com.example.weatherforecast.dto.WeatherFavoriteCreateDto;
 import com.example.weatherforecast.dto.WeatherFavoriteDeleteDto;
 import com.example.weatherforecast.service.WeatherFavoritesService;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
