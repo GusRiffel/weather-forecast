@@ -33,7 +33,7 @@ Back-end stacks:
 3. install the dependencies and run the project using the commands:
 - npm install
 - npm run dev  
-4. Now one the server folder make sure all the depencies are loaded, if not manually download with maven.
+4. Now on the server folder make sure all the depencies are loaded, if not manually download with maven.
 5. Add the following information to the application properties file:
 - apikey (the key provided by openweathermap to make requests)  
 - set up a DB connection (this project is using PostgreSQL)
