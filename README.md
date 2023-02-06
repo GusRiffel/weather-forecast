@@ -22,6 +22,7 @@ PostgreSQL is the database being used to stored data and H2 is used for tests.
 Back-end stacks:
 - Springboot
 - Springboot security
+- Swagger
 - Lombok
 - JWT
 - Model-Mapper
