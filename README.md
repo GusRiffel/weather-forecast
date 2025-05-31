@@ -12,14 +12,16 @@ A full-stack weather forecast application that allows users to check current and
 **Backend:**
 - Java
 - Spring Boot
+- Spring Boot Security
 - RESTful API
 - OpenWeatherMap API
+- JWT
+- Swagger
+- PostgreSQL
 
 **Tools & Deployment:**
 - Git & GitHub
 - IntelliJ IDEA
-- Netlify (frontend)
-- Render/Railway (backend)
 
 
 ## 📦 Features
@@ -44,11 +46,13 @@ A full-stack weather forecast application that allows users to check current and
 ``bash
 cd backend
 ./mvnw spring-boot:run
+define access_secret and refresh_secret for JWT
+past this code to fix swagger api bean error **_spring.mvc.pathmatch.matching-strategy=ant_path_matcher_**
 
 ### Frontend Setup
 cd frontend
 npm install
-npm start
+npm run dev 
 
 ## 🔑 API Key Configuration
 Create a .env file in the frontend root:
